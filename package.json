@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js"
+    "server": "nodemon backend/server.js"
   },
   "keywords": [],
   "author": "Natnael Anemut",
@@ -14,6 +14,7 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-async-handler": "^1.2.0",
     "mongoose": "^8.5.4"
   },
   "devDependencies": {
