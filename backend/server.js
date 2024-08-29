@@ -2,6 +2,10 @@ const express = require("express");
 const userRouter = require("./routes/user");
 const errorHandler = require("./middleware/errorHandler");
 const connectDB = require("./config/db");
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 const PORT = 4000;
 
 // connecting to the database

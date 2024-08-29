@@ -1,15 +1,15 @@
 {
-  "name": "addis-test-project",
+  "name": "backend",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node backend/server.js",
-    "server": "nodemon backend/server.js"
+    "start": "node server.js",
+    "server": "nodemon server.js"
   },
   "keywords": [],
   "author": "Natnael Anemut",
   "license": "ISC",
-  "description": "Test project for Addis Software Job Application",
+  "description": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
