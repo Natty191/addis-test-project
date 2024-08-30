@@ -1,7 +1,8 @@
-import Song from "../models/songModel.js";
+const asyncHandler = require("express-async-handler");
+const Song = require("../models/song");
 
 // Create a new song
-export const createSong = async (req, res) => {
+const createSong = asyncHandler(async (req, res) => {
   try {
     const { title, artist, album, genre } = req.body;
 
@@ -12,15 +13,15 @@ export const createSong = async (req, res) => {
       genre,
     });
 
-    res.status(201).json({ success: true, song });
+    res.status(201).json({ song });
   } catch (error) {
     res.status(400);
     throw new Error("Invalid song data");
   }
-};
+});
 
 // Get all songs
-export const getAllSongs = async (req, res) => {
+const getSongs = asyncHandler(async (req, res) => {
   try {
     const songs = await Song.find();
 
@@ -30,10 +31,10 @@ export const getAllSongs = async (req, res) => {
 
     throw new Error("Server error");
   }
-};
+});
 
 // Get a song by ID
-export const getSongById = async (req, res) => {
+const getSongById = asyncHandler(async (req, res) => {
   try {
     const song = await Song.findById(req.params.id);
 
@@ -46,10 +47,10 @@ export const getSongById = async (req, res) => {
     res.status(500);
     throw new Error("Server error");
   }
-};
+});
 
 // Update a song by ID
-export const updateSong = async (req, res) => {
+const updateSong = asyncHandler(async (req, res) => {
   try {
     const updatedSong = await Song.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -65,10 +66,10 @@ export const updateSong = async (req, res) => {
 
     throw new Error("Invalid song data");
   }
-};
+});
 
 // Delete a song by ID
-export const deleteSong = async (req, res) => {
+const deleteSong = asyncHandler(async (req, res) => {
   try {
     const deletedSong = await Song.findByIdAndDelete(req.params.id);
 
@@ -82,10 +83,10 @@ export const deleteSong = async (req, res) => {
 
     throw new Error("Server error");
   }
-};
+});
 
 // Get song statistics
-export const getSongStatistics = async (req, res) => {
+const getSongStatistics = asyncHandler(async (req, res) => {
   try {
     const totalSongs = await Song.countDocuments();
     const genres = await Song.aggregate([
@@ -120,4 +121,13 @@ export const getSongStatistics = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+});
+
+module.exports = {
+  createSong,
+  getSongs,
+  getSongById,
+  updateSong,
+  deleteSong,
+  getSongStatistics,
 };

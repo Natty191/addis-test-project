@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 // Define the song schema
 const songSchema = new mongoose.Schema(

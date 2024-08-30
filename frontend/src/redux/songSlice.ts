@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Song } from "song";
 
-type Song = {
-  id: string;
+type NewSong = {
   title: string;
   artist: string;
   album: string;
@@ -25,7 +25,7 @@ const songSlice = createSlice({
   name: "songs",
   initialState,
   reducers: {
-    fetchSongsStart(state: SongState) {
+    fetchSongsRequest(state: SongState) {
       state.loading = true;
       state.error = null;
     },
@@ -37,9 +37,20 @@ const songSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    addSong(state: SongState, action: PayloadAction<Song>) {
-      state.songs.push(action.payload);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    addSongStart(state: SongState, _action: PayloadAction<NewSong>) {
+      state.loading = true;
+      state.error = null;
     },
+    addSongSuccess(state: SongState, action: PayloadAction<Song>) {
+      state.songs.push(action.payload);
+      state.loading = false;
+    },
+    addSongFailure(state: SongState, action: PayloadAction<string>) {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
     updateSong(state: SongState, action: PayloadAction<Song>) {
       const index = state.songs.findIndex(
         (song: Song) => song.id === action.payload.id
@@ -51,17 +62,19 @@ const songSlice = createSlice({
     deleteSong(state: SongState, action: PayloadAction<string>) {
       state.songs = state.songs.filter(
         (song: Song) => song.id !== action.payload
-      );
+      ) as Song[];
     },
   },
 });
 
 // Export actions
 export const {
-  fetchSongsStart,
+  fetchSongsRequest,
   fetchSongsSuccess,
   fetchSongsFailure,
-  addSong,
+  addSongStart,
+  addSongSuccess,
+  addSongFailure,
   updateSong,
   deleteSong,
 } = songSlice.actions;
