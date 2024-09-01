@@ -1,20 +1,29 @@
 /** @jsxImportSource theme-ui */
 import { Song } from "song";
-import { Box, Image, Button } from "theme-ui";
+import { Box, Image } from "theme-ui";
+import { space, color, layout, border } from "styled-system";
+import styled from "@emotion/styled";
+
+const Card = styled(Box)(space, color, layout, border);
 
 const SongCard = ({ song }: { song: Song }) => {
   return (
-    <Box
+    <Card
       sx={{
-        width: ["30rem", "15rem", "12rem"], // Responsive widths
-        bg: "background",
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", // Soft shadow
-        borderRadius: "16px", // Rounded corners
-        overflow: "hidden", // Ensures the content stays inside
+        padding: "1.4rem",
+        // width: ["12rem", "15rem", "20rem"], // Responsive widths
+        // minWidth: "20rem", // Responsive widths
+        boxShadow: "0 4px 12px hsla(0, 0%, 0%, 0.1)",
+        borderRadius: "0.6rem",
+        overflow: "hidden",
         transition: "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
+
+        cursor: "pointer",
+        // fontSize: "1em",
         "&:hover": {
-          transform: "translateY(-8px)", // Hover lift effect
-          boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)", // Increase shadow depth on hover
+          bg: "lightgrey",
+          // transform: "translateY(-8px)",
+          boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
         },
       }}
     >
@@ -25,21 +34,37 @@ const SongCard = ({ song }: { song: Song }) => {
         alt={song.title}
         sx={{
           width: "100%",
-          height: "auto",
+          aspectRatio: 1,
+          borderRadius: "0.5rem",
+          marginBottom: "1rem",
+          // height: "auto",
         }}
       />
 
       {/* Song Details */}
-      <Box sx={{ p: 3 }}>
+      <Box
+        sx={{
+          p: 0,
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+          letterSpacing: ".12rem",
+        }}
+      >
         <h3
           sx={{
             m: 0,
+            width: "min-content",
+            // fontSize: "1.6rem",
             fontSize: 3,
-            fontWeight: "bold",
+            fontWeight: "300",
+            fontFamily: "Poppins",
+            // letterSpacing: "0.07rem",
             color: "text",
             whiteSpace: "nowrap", // Ensure title doesn't wrap
             overflow: "hidden",
             textOverflow: "ellipsis",
+            cursor: "pointer",
           }}
         >
           {song.title}
@@ -48,40 +73,23 @@ const SongCard = ({ song }: { song: Song }) => {
         <p
           sx={{
             m: 0,
-            mt: 2,
-            fontSize: 2,
-            color: "muted",
+            width: "min-content",
+            // mt: 2,
+            fontSize: 0,
+            color: "grey",
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            cursor: "pointer",
+            "&:hover": {
+              textDecoration: "underline",
+            },
           }}
         >
           {song.artist}
         </p>
-
-        {/* Play Button */}
-        <Button
-          variant="primary"
-          sx={{
-            mt: 3,
-            width: "100%",
-            bg: "primary",
-            color: "background",
-            display: "block",
-            textAlign: "center",
-            borderRadius: "8px",
-            fontSize: 2,
-            py: 2,
-            transition: "background-color 0.3s ease",
-            "&:hover": {
-              bg: "secondary", // Changes color on hover
-            },
-          }}
-        >
-          Play
-        </Button>
       </Box>
-    </Box>
+    </Card>
   );
 };
 

@@ -9,10 +9,11 @@ import {
   HiUser,
   HiOutlinePlusCircle,
 } from "react-icons/hi2";
-import { MdMusicNote, MdOutlineMusicNote } from "react-icons/md";
+import { MdMusicNote } from "react-icons/md";
 
 const StyledSidebar = styled.aside`
-  background-color: rgb(40, 40, 40);
+  /* background-color: rgb(40, 40, 40); */
+  background-color: rgb(24, 24, 24);
   color: rgb(170, 170, 170);
 
   display: flex;

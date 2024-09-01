@@ -2,9 +2,12 @@ import { Theme } from "theme-ui";
 
 const theme: Theme = {
   // Color modes for light and dark themes
+
   colors: {
     text: "#000",
-    background: "#fff",
+    background: "rgb(231,231,231)",
+    lightgrey: "rgb(210,210,210)",
+    grey: "rgb(76,76,76)",
     primary: "#33e",
     secondary: "#639",
     accent: "#f0c",
@@ -12,7 +15,9 @@ const theme: Theme = {
     modes: {
       dark: {
         text: "#fff",
-        background: "#000",
+        background: "rgb(24,24,24)",
+        lightgrey: "rgb(40,40,40)",
+        grey: "rgb(179,179,179)",
         primary: "#33e",
         secondary: "#9cf",
         accent: "#f3c",
@@ -27,7 +32,7 @@ const theme: Theme = {
     heading: "inherit",
     monospace: "Menlo, monospace",
   },
-  fontSizes: [12, 14, 16, 18, 24, 32, 48, 64, 72], // Responsive font sizes
+  fontSizes: [12, 14, 15, 16, 18, 24, 32, 48, 64, 72], // Responsive font sizes
   fontWeights: {
     body: 400,
     heading: 700,

@@ -2,42 +2,23 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
-import { fetchSongsRequest, deleteSong } from "../redux/songSlice";
+import { fetchSongsRequest } from "../redux/songSlice";
 import styled from "@emotion/styled";
 import { Song } from "song";
 import SongCard from "./SongCard";
-import FilterSong from "./Filter";
-import { Label } from "theme-ui";
+import Filter from "./Filter";
+import { Box } from "theme-ui";
+import {
+  space,
+  layout,
+  border,
+  color,
+  gridAutoRows,
+  gridAutoColumns,
+} from "styled-system";
 
-const FilterInput = styled.input`
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 10px;
-`;
+const Songs = styled(Box)(space, border, layout, color);
 
-const SongContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-`;
-
-const DeleteButton = styled.button`
-  padding: 6px 12px;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #d32f2f;
-  }
-`;
 function SongList() {
   const dispatch = useDispatch();
   const { songs, loading, error } = useSelector(
@@ -49,18 +30,6 @@ function SongList() {
   useEffect(() => {
     dispatch(fetchSongsRequest());
   }, [dispatch]);
-
-  const handleDelete = (id: string) => {
-    dispatch(deleteSong(id));
-  };
-
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      [name]: value,
-    }));
-  };
 
   const filteredSongs = songs.filter(
     (song) =>
@@ -77,24 +46,7 @@ function SongList() {
 
   return (
     <div>
-      {/* <div style={{ marginBottom: "20px" }}>
-        <FilterInput
-          type="text"
-          name="genre"
-          placeholder="Filter by Genre"
-          value={filter.genre}
-          onChange={handleFilterChange}
-        />
-        <FilterInput
-          type="text"
-          name="artist"
-          placeholder="Filter by Artist"
-          value={filter.artist}
-          onChange={handleFilterChange}
-        />
-      </div> */}
-
-      <FilterSong
+      <Filter
         filterField="filterBy"
         options={[
           { label: "Genre", value: "genre" },
@@ -102,33 +54,17 @@ function SongList() {
         ]}
       />
 
-      <div>
+      <Songs
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, minmax(23rem, 1fr))",
+          gridAutoColumns: "23rem",
+        }}
+      >
         {filteredSongs.map((song: Song) => (
           <SongCard key={song.id} song={song} />
-          // <SongContainer key={song.id}>
-          //   <div>
-          //     <p>
-          //       <strong>Title:</strong> {song.title}
-          //     </p>
-          //     <p>
-          //       <strong>Artist:</strong> {song.artist}
-          //     </p>
-          //     <p>
-          //       <strong>Album:</strong> {song.album}
-          //     </p>
-          //     <p>
-          //       <strong>Genre:</strong> {song.genre}
-          //     </p>
-          //   </div>
-          //   <div>
-          //     <DeleteButton onClick={() => handleDelete(song.id)}>
-          //       Delete
-          //     </DeleteButton>
-          //     {/* add an Edit button here */}
-          //   </div>
-          // </SongContainer>
         ))}
-      </div>
+      </Songs>
     </div>
   );
 }
