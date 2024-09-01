@@ -5,6 +5,9 @@ import { RootState } from "../redux/store";
 import { fetchSongsRequest, deleteSong } from "../redux/songSlice";
 import styled from "@emotion/styled";
 import { Song } from "song";
+import SongCard from "./SongCard";
+import FilterSong from "./Filter";
+import { Label } from "theme-ui";
 
 const FilterInput = styled.input`
   padding: 8px;
@@ -74,7 +77,7 @@ function SongList() {
 
   return (
     <div>
-      <div style={{ marginBottom: "20px" }}>
+      {/* <div style={{ marginBottom: "20px" }}>
         <FilterInput
           type="text"
           name="genre"
@@ -89,32 +92,41 @@ function SongList() {
           value={filter.artist}
           onChange={handleFilterChange}
         />
-      </div>
+      </div> */}
+
+      <FilterSong
+        filterField="filterBy"
+        options={[
+          { label: "Genre", value: "genre" },
+          { label: "Artist", value: "artist" },
+        ]}
+      />
 
       <div>
         {filteredSongs.map((song: Song) => (
-          <SongContainer key={song.id}>
-            <div>
-              <p>
-                <strong>Title:</strong> {song.title}
-              </p>
-              <p>
-                <strong>Artist:</strong> {song.artist}
-              </p>
-              <p>
-                <strong>Album:</strong> {song.album}
-              </p>
-              <p>
-                <strong>Genre:</strong> {song.genre}
-              </p>
-            </div>
-            <div>
-              <DeleteButton onClick={() => handleDelete(song.id)}>
-                Delete
-              </DeleteButton>
-              {/* add an Edit button here */}
-            </div>
-          </SongContainer>
+          <SongCard key={song.id} song={song} />
+          // <SongContainer key={song.id}>
+          //   <div>
+          //     <p>
+          //       <strong>Title:</strong> {song.title}
+          //     </p>
+          //     <p>
+          //       <strong>Artist:</strong> {song.artist}
+          //     </p>
+          //     <p>
+          //       <strong>Album:</strong> {song.album}
+          //     </p>
+          //     <p>
+          //       <strong>Genre:</strong> {song.genre}
+          //     </p>
+          //   </div>
+          //   <div>
+          //     <DeleteButton onClick={() => handleDelete(song.id)}>
+          //       Delete
+          //     </DeleteButton>
+          //     {/* add an Edit button here */}
+          //   </div>
+          // </SongContainer>
         ))}
       </div>
     </div>

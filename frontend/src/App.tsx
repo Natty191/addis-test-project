@@ -1,14 +1,10 @@
-import {
-  Route,
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider,
-  BrowserRouter as Router,
-  Routes,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import SongList from "./components/SongList";
 import AddSongForm from "./components/AddSongForm";
 import AppLayout from "./layouts/AppLayout";
+import { ThemeUIProvider } from "theme-ui";
+import theme from "./styles/theme";
+import GlobalStyles from "./styles/GlobalStyles";
 // import SongStatistics from './components/SongStatistics';
 
 function App() {
@@ -40,21 +36,11 @@ function App() {
   );
 
   return (
-    <div>
+    <ThemeUIProvider theme={theme}>
+      <GlobalStyles />
       <RouterProvider router={router} />
-
-      {/* <Router>
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route path="/" element={<SongList />} />
-            <Route path="/add-song" element={<AddSongForm />} />
-          </Route>
-        </Routes>
-      </Router> */}
-    </div>
+    </ThemeUIProvider>
   );
-
-  // return <RouterProvider router={router} />;
 }
 
 export default App;
