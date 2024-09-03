@@ -1,4 +1,4 @@
-/** @jsxImportSource @emotion/react */
+/** @jsxImportSource theme-ui */
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
@@ -7,17 +7,12 @@ import styled from "@emotion/styled";
 import { Song } from "song";
 import SongCard from "./SongCard";
 import Filter from "./Filter";
-import { Box } from "theme-ui";
-import {
-  space,
-  layout,
-  border,
-  color,
-  gridAutoRows,
-  gridAutoColumns,
-} from "styled-system";
 
-const Songs = styled(Box)(space, border, layout, color);
+const Songs = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, minmax(23rem, 1fr));
+  grid-auto-columns: 23rem;
+`;
 
 function SongList() {
   const dispatch = useDispatch();
@@ -54,13 +49,7 @@ function SongList() {
         ]}
       />
 
-      <Songs
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(23rem, 1fr))",
-          gridAutoColumns: "23rem",
-        }}
-      >
+      <Songs>
         {filteredSongs.map((song: Song) => (
           <SongCard key={song.id} song={song} />
         ))}

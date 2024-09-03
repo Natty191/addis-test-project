@@ -1,3 +1,4 @@
+/** @jsxImportSource theme-ui */
 import styled from "@emotion/styled";
 import Search from "./Search";
 import HeaderMunu from "./HeaderMenu";
@@ -5,10 +6,10 @@ import Logo from "./Logo";
 import FlowButton from "./FlowButtons";
 
 const StyledHeader = styled.header`
-  background: rgb(40, 40, 40);
+  /* background: rgb(40, 40, 40); */
   padding: 1rem 3.5rem;
-  color: rgb(170, 170, 170);
-  border-bottom: 1px solid rgb(24, 24, 24);
+  /* color: rgb(170, 170, 170); */
+  /* border-bottom: 1px solid rgb(0, 0, 0); */
 
   display: flex;
   flex-flow: row wrap;
@@ -19,7 +20,9 @@ const StyledHeader = styled.header`
 
 const Header = () => {
   return (
-    <StyledHeader>
+    <StyledHeader
+      sx={{ background: "background", color: "lightgrey", boxShadow: "small" }}
+    >
       <Logo />
       <FlowButton />
       <Search />

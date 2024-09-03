@@ -1,6 +1,7 @@
-import { createContext, useContext, useState } from "react";
+/** @jsxImportSource theme-ui */
+import { createContext, ReactNode, useContext, useState } from "react";
 import { createPortal } from "react-dom";
-import { HiChevronDown, HiEllipsisVertical } from "react-icons/hi2";
+import { HiChevronDown } from "react-icons/hi2";
 import styled from "@emotion/styled";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 
@@ -11,24 +12,12 @@ const Menu = styled.div`
 `;
 
 const StyledToggle = styled.button`
-  background: none;
+  background: transparent;
   border: none;
   padding: 0.4rem;
   border-radius: 0.5rem;
   transform: translateX(0.8rem);
   transition: all 0.2s;
-
-  /* font-size: 3.2rem; */
-
-  &:hover {
-    background-color: #1f2937;
-  }
-
-  & svg {
-    width: 2.4rem;
-    height: 2.4rem;
-    color: #e5e7eb;
-  }
 `;
 
 type ListProps = {
@@ -38,7 +27,6 @@ type ListProps = {
 const StyledList = styled.ul<ListProps>`
   position: fixed;
 
-  background-color: #18212f;
   box-shadow: 0px 0.6rem 2.4rem rgba(0, 0, 0, 0.3);
   border-radius: 0.7rem;
 
@@ -49,7 +37,7 @@ const StyledList = styled.ul<ListProps>`
 const StyledButton = styled.button`
   width: 100%;
   text-align: left;
-  background: none;
+  background: transparent;
   border: none;
   padding: 1.2rem 2.4rem;
   font-size: 1.4rem;
@@ -58,17 +46,6 @@ const StyledButton = styled.button`
   display: flex;
   align-items: center;
   gap: 1.6rem;
-
-  &:hover {
-    background-color: #111827;
-  }
-
-  & svg {
-    width: 1.6rem;
-    height: 1.6rem;
-    color: #6b7280;
-    transition: all 0.3s;
-  }
 `;
 
 type Position = {
@@ -126,7 +103,16 @@ function Toggle({ id }: { id: string }) {
   }
 
   return (
-    <StyledToggle onClick={handleClick}>
+    <StyledToggle
+      onClick={handleClick}
+      sx={{
+        svg: {
+          width: "2.4rem",
+          height: "2.4rem",
+          color: "text",
+        },
+      }}
+    >
       <HiChevronDown />
     </StyledToggle>
   );
@@ -142,7 +128,7 @@ function List({ id, children }: { id: string; children: React.ReactNode }) {
   if (openId !== id) return null;
 
   return createPortal(
-    <StyledList position={position} ref={ref}>
+    <StyledList position={position} ref={ref} sx={{ background: "backgroun" }}>
       {children}
     </StyledList>,
     document.body
@@ -154,8 +140,8 @@ function Button({
   icon,
   onClick,
 }: {
-  children: string;
-  icon: any;
+  children: ReactNode;
+  icon: ReactNode;
   onClick?: () => void;
 }) {
   const { close } = useContext(MenusContext) as UserContextType;
@@ -167,7 +153,19 @@ function Button({
 
   return (
     <li>
-      <StyledButton onClick={handleClick}>
+      <StyledButton
+        onClick={handleClick}
+        sx={{
+          color: "lightgrey",
+          "& svg": {
+            width: "1.6rem",
+            height: "1.6rem",
+            transition: "all 0.3s",
+          },
+
+          "&:hover": { background: "darkgrey" },
+        }}
+      >
         {icon}
         <span>{children}</span>
       </StyledButton>

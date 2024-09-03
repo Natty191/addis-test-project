@@ -1,3 +1,4 @@
+/** @jsxImportSource theme-ui */
 import styled from "@emotion/styled";
 import NavList from "./NavLIst";
 import {
@@ -12,9 +13,9 @@ import {
 import { MdMusicNote } from "react-icons/md";
 
 const StyledSidebar = styled.aside`
-  /* background-color: rgb(40, 40, 40); */
-  background-color: rgb(24, 24, 24);
-  color: rgb(170, 170, 170);
+  /* background-color: hsl(0, 0%, 15.686274509803921%); */
+  /* color: rgb(170, 170, 170); */
+  /* padding-top: 3rem; */
 
   display: flex;
   flex-direction: column;
@@ -26,29 +27,15 @@ const StyledSidebar = styled.aside`
 `;
 
 const Navigation = styled.div`
-  padding: 1rem 2.4rem;
+  padding: 3rem 2.4rem;
 
   overflow-y: scroll;
-
-  /* border-bottom: 1px solid rgb(24, 24, 24); */
 `;
 
 const Playlist = styled.div`
   padding: 2.4rem;
-  background: rgb(40, 40, 40);
-  border-top: 1px solid rgb(24, 24, 24);
-  border-bottom: 1px solid rgb(24, 24, 24);
-
-  &:hover {
-    background: rgb(70, 70, 70);
-    a {
-      color: white;
-    }
-  }
 
   a {
-    color: rgb(130, 130, 130);
-
     display: flex;
     align-items: center;
 
@@ -61,7 +48,7 @@ const Playlist = styled.div`
 
 const Sidebar = () => {
   return (
-    <StyledSidebar>
+    <StyledSidebar sx={{ color: "lightgrey" }}>
       <Navigation>
         <NavList title="Main">
           <NavList.Item
@@ -101,7 +88,21 @@ const Sidebar = () => {
         </NavList>
       </Navigation>
 
-      <Playlist>
+      <Playlist
+        sx={(props) => ({
+          background: "background",
+          borderTop: `2px solid ${props.colors?.grey}`,
+          borderBottom: `2px solid ${props.colors?.grey}`,
+          color: "lightgrey",
+
+          "&:hover": {
+            background: "grey",
+            a: {
+              color: "text",
+            },
+          },
+        })}
+      >
         <a href="#">
           <HiOutlinePlusCircle />
           Add Playlist

@@ -4,32 +4,34 @@ const theme: Theme = {
   // Color modes for light and dark themes
 
   colors: {
-    text: "#000",
-    background: "rgb(231,231,231)",
-    lightgrey: "rgb(210,210,210)",
-    grey: "rgb(76,76,76)",
-    primary: "#33e",
-    secondary: "#639",
-    accent: "#f0c",
-    muted: "#f6f6f6",
+    text: "#fff",
+    background: "rgb(24,24,24)",
+    darkgrey: "rgb(30,30,30)",
+    grey: "rgb(40,40,40)",
+    lightgrey: "rgb(130,130,130)",
+    primary: "#1ed760",
+    secondary: "#9cf",
+    accent: "#f3c",
+    muted: "#111",
     modes: {
-      dark: {
-        text: "#fff",
-        background: "rgb(24,24,24)",
-        lightgrey: "rgb(40,40,40)",
-        grey: "rgb(179,179,179)",
-        primary: "#33e",
-        secondary: "#9cf",
-        accent: "#f3c",
-        muted: "#111",
+      light: {
+        text: "#000",
+        background: "rgb(231,231,231)",
+        darkgrey: "rgb(220,220,220)",
+        grey: "rgb(210,210,210)",
+        lightgrey: "rgb(90,90,90)",
+        // primary: "#33e",
+        secondary: "#639",
+        accent: "#f0c",
+        muted: "#f6f6f6",
       },
     },
   },
 
   // Typography scale for consistent font sizes
   fonts: {
-    body: "system-ui, sans-serif",
-    heading: "inherit",
+    body: 'system-ui, sans-serif, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+    heading: "Georgia, serif",
     monospace: "Menlo, monospace",
   },
   fontSizes: [12, 14, 15, 16, 18, 24, 32, 48, 64, 72], // Responsive font sizes
@@ -62,7 +64,7 @@ const theme: Theme = {
 
   // Shadows for depth and emphasis
   shadows: {
-    small: "0 1px 3px rgba(0, 0, 0, 0.12)",
+    small: "0px 0px 8px rgba(0, 0, 0, 0.1)",
     medium: "0 4px 6px rgba(0, 0, 0, 0.16)",
     large: "0 10px 20px rgba(0, 0, 0, 0.19)",
   },

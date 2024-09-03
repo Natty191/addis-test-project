@@ -23,7 +23,7 @@ const GlobalStyles = () => (
         margin: 0;
         font-family: Arial, sans-serif;
         /* background-color: rgb(24, 24, 24); */
-        background-color: rgb(32, 32, 32);
+        /* background-color: rgb(32, 32, 32); */
         font-size: 1.4rem;
 
         overflow-y: hidden;
@@ -38,6 +38,7 @@ const GlobalStyles = () => (
       }
 
       a {
+        color: inherit;
         text-decoration: none;
       }
 
@@ -75,8 +76,8 @@ const GlobalStyles = () => (
         border-radius: 4px;
         /* background: rgb(40, 40, 40); */
         background-image: linear-gradient(
-          rgba(160, 160, 160, 0.1),
-          rgba(160, 160, 160, 0.1)
+          rgba(160, 160, 160, 0.2),
+          rgba(160, 160, 160, 0.2)
         );
       }
     `}

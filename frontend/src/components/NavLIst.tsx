@@ -1,3 +1,4 @@
+/** @jsxImportSource theme-ui */
 import styled from "@emotion/styled";
 import React, { useState } from "react";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
@@ -23,7 +24,7 @@ const NavHeader = styled.div`
 `;
 
 const StyledListItem = styled.a`
-  color: rgb(99, 99, 99);
+  /* color: rgb(99, 99, 99); */
   padding: 0.5rem 0;
 
   display: flex;
@@ -31,15 +32,6 @@ const StyledListItem = styled.a`
   align-items: center;
 
   gap: 1rem;
-
-  &:hover {
-    color: rgb(255, 255, 255);
-    border-right: 3px solid rgb(30, 215, 96);
-
-    svg {
-      color: rgb(30, 215, 96);
-    }
-  }
 `;
 
 const ListItem = ({
@@ -52,7 +44,17 @@ const ListItem = ({
   href: string;
 }) => {
   return (
-    <StyledListItem href={href} title={title}>
+    <StyledListItem
+      href={href}
+      title={title}
+      sx={(props) => ({
+        ":hover": {
+          color: "text",
+          borderRight: `3px solid ${props.colors?.primary}`,
+          svg: { color: props.colors?.primary },
+        },
+      })}
+    >
       {icon}
       <span>{title}</span>
     </StyledListItem>
@@ -76,7 +78,11 @@ const NavList = ({ title, children }: NavListProps) => {
   const [collapse, setCollapse] = useState(false);
 
   return (
-    <StyledNavList className="navigation__list">
+    <StyledNavList
+      sx={{
+        color: "lightgrey",
+      }}
+    >
       <NavHeader
         onClick={() => setCollapse((col) => !col)}
         role="button"

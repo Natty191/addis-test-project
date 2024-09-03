@@ -13,17 +13,18 @@ const SongCard = ({ song }: { song: Song }) => {
         padding: "1.4rem",
         // width: ["12rem", "15rem", "20rem"], // Responsive widths
         // minWidth: "20rem", // Responsive widths
-        boxShadow: "0 4px 12px hsla(0, 0%, 0%, 0.1)",
+
+        // boxShadow: "0 4px 12px hsla(0, 0%, 0%, 0.1)",
         borderRadius: "0.6rem",
         overflow: "hidden",
-        transition: "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
+        transition:
+          "background .2s linear, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
 
         cursor: "pointer",
-        // fontSize: "1em",
+
         "&:hover": {
-          bg: "lightgrey",
-          // transform: "translateY(-8px)",
-          boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
+          bg: "grey",
+          // boxShadow: "small",
         },
       }}
     >
@@ -34,7 +35,8 @@ const SongCard = ({ song }: { song: Song }) => {
         alt={song.title}
         sx={{
           width: "100%",
-          aspectRatio: 1,
+          aspectRatio: 1.1,
+          objectFit: "cover",
           borderRadius: "0.5rem",
           marginBottom: "1rem",
           // height: "auto",
@@ -76,7 +78,7 @@ const SongCard = ({ song }: { song: Song }) => {
             width: "min-content",
             // mt: 2,
             fontSize: 0,
-            color: "grey",
+            color: "lightgrey",
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",

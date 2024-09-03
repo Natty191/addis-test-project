@@ -1,7 +1,9 @@
+/** @jsxImportSource theme-ui */
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import styled from "@emotion/styled";
+import {} from "theme-ui";
 
 const StyledAppLayout = styled.div`
   display: grid;
@@ -13,6 +15,8 @@ const StyledAppLayout = styled.div`
 const Main = styled.main`
   padding: 4rem 4.8rem 6.4rem;
   overflow-y: scroll;
+
+  border-radius: 4px;
 `;
 
 const Container = styled.div`
@@ -29,7 +33,7 @@ const AppLayout = () => {
     <StyledAppLayout>
       <Header />
       <Sidebar />
-      <Main>
+      <Main sx={{ background: "darkgrey" }}>
         <Container>
           <Outlet />
         </Container>
