@@ -24,7 +24,6 @@ const NavHeader = styled.div`
 `;
 
 const StyledListItem = styled.a`
-  /* color: rgb(99, 99, 99); */
   padding: 0.5rem 0;
 
   display: flex;

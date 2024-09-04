@@ -1,7 +1,9 @@
+/** @jsxImportSource theme-ui */
 import { useSearchParams } from "react-router-dom";
 // import styled, { css } from "styled-components";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
+import { background } from "styled-system";
 
 type ButtonProps = {
   active: boolean;
@@ -12,36 +14,25 @@ const StyledFilter = styled.div`
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-sm);
   border-radius: var(--border-radius-sm);
-  padding: 0.4rem;
+  padding: 0.4rem 1.4rem;
   display: flex;
-  gap: 0.4rem;
+  gap: 0.5rem;
 `;
 
 const FilterButton = styled.button<ButtonProps>`
-  background-color: var(--color-grey-0);
   border: none;
 
-  ${(props) =>
-    props.active &&
-    css`
-      /* background-color: var(--color-brand-600); */
-      background-color: lightblue;
-      color: var(--color-brand-50);
-    `}
-
-  /* border-radius: var(--border-radius-sm); */
-  border-radius: 0.4rem;
+  border-radius: 100rem;
   font-weight: 500;
   font-size: 1.4rem;
   /* To give the same height as select */
   padding: 0.44rem 0.8rem;
-  transition: all 0.3s;
+  transition: all 0.15s;
 
-  &:hover:not(:disabled) {
-    /* background-color: var(--color-brand-600); */
+  /* &:hover:not(:disabled) {
     background-color: lightblue;
     color: var(--color-brand-50);
-  }
+  } */
 `;
 
 function Filter({
@@ -61,13 +52,29 @@ function Filter({
   }
 
   return (
-    <StyledFilter>
+    <StyledFilter
+      sx={(props) => ({
+        border: `1px solid ${props.colors?.grey}`,
+        background: "darkgrey",
+        boxShadow: "small",
+        borderRadius: "small",
+      })}
+    >
       {options.map((option) => (
         <FilterButton
           key={option.value}
           active={option.value === currentFilter}
           onClick={() => handleClick(option.value)}
           disabled={option.value === currentFilter}
+          sx={{
+            background: option.value === currentFilter ? "primary" : "darkgrey",
+            color: option.value === currentFilter ? "background" : "lightgrey",
+
+            "&:hover:not(:disabled)": {
+              background: "grey",
+              color: "primary",
+            },
+          }}
         >
           {option.label}
         </FilterButton>

@@ -43,7 +43,8 @@ const AppLayout = () => {
       <Main
         sx={{
           background: "darkgrey",
-          paddingInline: [0, 2, 4],
+          paddingInline: [0, 2, 3],
+          paddingBlock: [0, 1, 3],
 
           gridColumn: ["1 / -1", "initial"],
         }}

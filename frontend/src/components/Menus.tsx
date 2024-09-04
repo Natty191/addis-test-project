@@ -42,6 +42,12 @@ const StyledButton = styled.button`
   font-size: 1.4rem;
   transition: all 0.2s;
 
+  svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    transition: all 0.3s;
+  }
+
   display: flex;
   align-items: center;
   gap: 1.6rem;
@@ -156,13 +162,11 @@ function Button({
         onClick={handleClick}
         sx={{
           color: "lightgrey",
-          "& svg": {
-            width: "1.6rem",
-            height: "1.6rem",
-            transition: "all 0.3s",
-          },
 
-          "&:hover": { background: "darkgrey" },
+          "&:hover": {
+            background: "grey",
+            svg: { color: "primary" },
+          },
         }}
       >
         {icon}

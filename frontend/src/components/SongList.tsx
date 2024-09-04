@@ -40,7 +40,7 @@ function SongList() {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div>
+    <div sx={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
       <Filter
         filterField="filterBy"
         options={[

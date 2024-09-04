@@ -11,6 +11,7 @@ const Avatar = styled.img`
   max-height: 3rem;
   border-radius: 50%;
   display: inline-block;
+  cursor: pointer;
 `;
 
 const UserAvatar = () => {
