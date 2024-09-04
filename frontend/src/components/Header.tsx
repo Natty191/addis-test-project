@@ -4,6 +4,8 @@ import Search from "./Search";
 import HeaderMunu from "./HeaderMenu";
 import Logo from "./Logo";
 import FlowButton from "./FlowButtons";
+import { HiBars3 } from "react-icons/hi2";
+import ButtonIcon from "./ButtonIcon";
 
 const StyledHeader = styled.header`
   /* background: rgb(40, 40, 40); */
@@ -18,11 +20,36 @@ const StyledHeader = styled.header`
   grid-column: 1 / -1;
 `;
 
-const Header = () => {
+const Header = ({
+  setIsDrawerOpen,
+}: {
+  setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   return (
     <StyledHeader
-      sx={{ background: "background", color: "lightgrey", boxShadow: "small" }}
+      sx={{
+        background: "background",
+        color: "lightgrey",
+        boxShadow: "small",
+        paddingInline: [0],
+
+        // display: [null, null, "none"],d
+
+        button: {
+          "&:hover": { color: "text" },
+        },
+      }}
     >
+      <ButtonIcon
+        onClick={() => setIsDrawerOpen((open) => !open)}
+        sx={{
+          paddingInline: "2rem",
+          zIndex: 10,
+          display: [null, null, "none"],
+        }}
+      >
+        <HiBars3 />
+      </ButtonIcon>
       <Logo />
       <FlowButton />
       <Search />

@@ -12,20 +12,6 @@ import {
 } from "react-icons/hi2";
 import { MdMusicNote } from "react-icons/md";
 
-const StyledSidebar = styled.aside`
-  /* background-color: hsl(0, 0%, 15.686274509803921%); */
-  /* color: rgb(170, 170, 170); */
-  /* padding-top: 3rem; */
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  height: calc(100vh - 5.7rem);
-
-  position: relative;
-`;
-
 const Navigation = styled.div`
   padding: 3rem 2.4rem;
 
@@ -46,9 +32,24 @@ const Playlist = styled.div`
   }
 `;
 
-const Sidebar = () => {
+const Sidebar = ({ isDrawerOpen }: { isDrawerOpen: boolean }) => {
   return (
-    <StyledSidebar sx={{ color: "lightgrey" }}>
+    <aside
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+
+        height: "calc(100vh - 5.7rem)",
+        color: "lightgrey",
+        background: "background",
+
+        position: ["absolute", isDrawerOpen ? "static" : "absolute", "static"],
+        bottom: 0,
+        right: [isDrawerOpen ? "30%" : "initial", "initial"],
+        left: isDrawerOpen ? "0" : "-100%",
+      }}
+    >
       <Navigation>
         <NavList title="Main">
           <NavList.Item
@@ -108,7 +109,7 @@ const Sidebar = () => {
           Add Playlist
         </a>
       </Playlist>
-    </StyledSidebar>
+    </aside>
   );
 };
 

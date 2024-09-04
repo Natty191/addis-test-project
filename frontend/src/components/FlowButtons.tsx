@@ -3,11 +3,10 @@ import styled from "@emotion/styled";
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
 import ButtonIcon from "./ButtonIcon";
 
-const FlowButtonsStyle = styled.div`
+const StyledFlowButtons = styled.div`
   margin-left: 1rem;
 
   span {
-    font-size: 2.3rem;
     /* color: rgb(170, 170, 170); */
     margin-left: 1rem;
 
@@ -19,14 +18,19 @@ const FlowButtonsStyle = styled.div`
 
 const FlowButton = () => {
   return (
-    <FlowButtonsStyle sx={{ span: { "&:hover": { color: "text" } } }}>
+    <StyledFlowButtons
+      sx={{
+        span: { "&:hover": { color: "text" } },
+        display: ["none", null, "block"],
+      }}
+    >
       <ButtonIcon>
         <HiOutlineChevronLeft />
       </ButtonIcon>
       <ButtonIcon>
         <HiOutlineChevronRight />
       </ButtonIcon>
-    </FlowButtonsStyle>
+    </StyledFlowButtons>
   );
 };
 

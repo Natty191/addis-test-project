@@ -14,9 +14,8 @@ const Menu = styled.div`
 const StyledToggle = styled.button`
   background: transparent;
   border: none;
-  padding: 0.4rem;
+  padding: 0.4rem 2rem;
   border-radius: 0.5rem;
-  transform: translateX(0.8rem);
   transition: all 0.2s;
 `;
 
@@ -128,7 +127,7 @@ function List({ id, children }: { id: string; children: React.ReactNode }) {
   if (openId !== id) return null;
 
   return createPortal(
-    <StyledList position={position} ref={ref} sx={{ background: "backgroun" }}>
+    <StyledList position={position} ref={ref} sx={{ background: "background" }}>
       {children}
     </StyledList>,
     document.body

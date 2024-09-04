@@ -24,7 +24,7 @@ const SongCard = ({ song }: { song: Song }) => {
 
         "&:hover": {
           bg: "grey",
-          // boxShadow: "small",
+          boxShadow: "medium",
         },
       }}
     >

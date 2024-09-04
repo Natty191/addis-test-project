@@ -1,23 +1,17 @@
 import styled from "@emotion/styled";
 import UserAvatar from "./UserAvatar";
 import Menus from "./Menus";
-import {
-  HiArrowRightOnRectangle,
-  HiOutlineSun,
-  HiOutlineUser,
-  HiSun,
-} from "react-icons/hi2";
+import { HiArrowRightOnRectangle, HiSun } from "react-icons/hi2";
 import { useColorMode } from "theme-ui";
-import { HiColorSwatch } from "react-icons/hi";
 
 const StyledHeaderMenu = styled.div`
-  width: 20rem;
   margin-left: auto;
 
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 2rem;
 `;
 
 const HeaderMunu = () => {

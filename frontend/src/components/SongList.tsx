@@ -10,8 +10,8 @@ import Filter from "./Filter";
 
 const Songs = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, minmax(23rem, 1fr));
-  grid-auto-columns: 23rem;
+  grid-template-columns: repeat(auto-fill, minmax(23rem, 1fr));
+  /* grid-auto-columns: 23rem; */
 `;
 
 function SongList() {

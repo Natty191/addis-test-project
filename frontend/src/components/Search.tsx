@@ -4,6 +4,7 @@ import { HiOutlineSearch } from "react-icons/hi";
 
 const StyledSearch = styled.div`
   margin: 0 2rem;
+  max-width: 20rem;
 
   svg {
     position: absolute;
@@ -19,12 +20,12 @@ const Input = styled.input`
   /* background: #f3f3f3; */
   padding: 0.3rem 3rem;
   outline: none;
-  width: 20rem;
+  /* max-width: 20rem; */
   background-repeat: no-repeat;
   background-size: 10%;
   background-position: 5px;
 
-  transition: all 0.15s cubic-bezier(0.42, 0, 0.47, 1.85);
+  /* transition: all 0.15s cubic-bezier(0.42, 0, 0.47, 1.85); */
 `;
 
 const Search = () => {
@@ -37,6 +38,7 @@ const Search = () => {
         sx={(props) => ({
           background: "darkgrey",
           color: "text",
+          // width: ["15rem", "20rem"],
           ":focus": {
             outline: `1px solid ${props.colors?.primary}`,
           },

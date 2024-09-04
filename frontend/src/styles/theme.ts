@@ -5,9 +5,9 @@ const theme: Theme = {
 
   colors: {
     text: "#fff",
-    background: "rgb(24,24,24)",
-    darkgrey: "rgb(30,30,30)",
-    grey: "rgb(40,40,40)",
+    background: "rgb(8,8,8)",
+    darkgrey: "rgb(13,13,13)",
+    grey: "rgb(22,22,22)",
     lightgrey: "rgb(130,130,130)",
     primary: "#1ed760",
     secondary: "#9cf",
@@ -16,10 +16,10 @@ const theme: Theme = {
     modes: {
       light: {
         text: "#000",
-        background: "rgb(231,231,231)",
-        darkgrey: "rgb(220,220,220)",
-        grey: "rgb(210,210,210)",
-        lightgrey: "rgb(90,90,90)",
+        background: "rgb(221,221,221)",
+        darkgrey: "rgb(214,214,214)",
+        grey: "rgb(200,200,200)",
+        lightgrey: "rgb(70,70,70)",
         // primary: "#33e",
         secondary: "#639",
         accent: "#f0c",
@@ -46,7 +46,16 @@ const theme: Theme = {
   },
 
   // Space scale for margins and paddings
-  space: [0, 4, 8, 16, 32, 64, 128, 256],
+  space: [
+    "0rem",
+    "0.4rem",
+    "0.8rem",
+    "1.6rem",
+    "3.2rem",
+    "6.4rem",
+    "12.8rem",
+    "25.6rem",
+  ],
 
   // Sizing scale for width, height, etc.
   sizes: {
@@ -55,7 +64,7 @@ const theme: Theme = {
   },
 
   // Responsive breakpoints
-  breakpoints: ["40em", "52em", "64em"],
+  breakpoints: ["40em", "65em", "80em"],
   mediaQueries: {
     small: "@media screen and (max-width: 40em)",
     medium: "@media screen and (min-width: 40em)",
@@ -65,7 +74,7 @@ const theme: Theme = {
   // Shadows for depth and emphasis
   shadows: {
     small: "0px 0px 8px rgba(0, 0, 0, 0.1)",
-    medium: "0 4px 6px rgba(0, 0, 0, 0.16)",
+    medium: "0 2px 6px rgba(0, 0, 0, 0.16)",
     large: "0 10px 20px rgba(0, 0, 0, 0.19)",
   },
 

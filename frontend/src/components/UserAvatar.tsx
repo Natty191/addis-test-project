@@ -1,7 +1,7 @@
+/** @jsxImportSource theme-ui */
 import styled from "@emotion/styled";
 
 const StyledUserAvatar = styled.div`
-  display: flex;
   align-items: center;
   gap: 0.5rem;
 `;
@@ -15,13 +15,13 @@ const Avatar = styled.img`
 
 const UserAvatar = () => {
   return (
-    <StyledUserAvatar>
+    <StyledUserAvatar sx={{ display: ["none", "flex"] }}>
       <Avatar
         src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/adam_proPic.jpg"
         alt="Profile Picture"
       />
-      <span>
-        <span>Adam</span> <span>Lowenthal</span>
+      <span sx={{ display: ["none", null, "block"] }}>
+        <span>Adam Lowenthal</span>
       </span>
     </StyledUserAvatar>
   );

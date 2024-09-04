@@ -3,20 +3,17 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import styled from "@emotion/styled";
-import {} from "theme-ui";
+import { useState } from "react";
 
 const StyledAppLayout = styled.div`
   display: grid;
-  grid-template-columns: 24rem 1fr;
   grid-template-rows: 5.7rem 1fr;
   height: 100vh;
 `;
 
 const Main = styled.main`
-  padding: 4rem 4.8rem 6.4rem;
-  overflow-y: scroll;
-
   border-radius: 4px;
+  overflow-y: scroll;
 `;
 
 const Container = styled.div`
@@ -29,11 +26,28 @@ const Container = styled.div`
 `;
 
 const AppLayout = () => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
   return (
-    <StyledAppLayout>
-      <Header />
-      <Sidebar />
-      <Main sx={{ background: "darkgrey" }}>
+    <StyledAppLayout
+      sx={{
+        gridTemplateColumns: [
+          "1fr",
+          isDrawerOpen ? "24rem 1fr" : null,
+          "24rem 1fr",
+        ],
+      }}
+    >
+      <Header setIsDrawerOpen={setIsDrawerOpen} />
+      <Sidebar isDrawerOpen={isDrawerOpen} />
+      <Main
+        sx={{
+          background: "darkgrey",
+          paddingInline: [0, 2, 4],
+
+          gridColumn: ["1 / -1", "initial"],
+        }}
+      >
         <Container>
           <Outlet />
         </Container>

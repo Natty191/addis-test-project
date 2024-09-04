@@ -1,7 +1,7 @@
 /** @jsxImportSource theme-ui */
 import styled from "@emotion/styled";
 
-const StyledButtonIcon = styled.button`
+const ButtonIcon = styled.button`
   background: none;
   border: none;
   padding: 0.6rem;
@@ -13,18 +13,18 @@ const StyledButtonIcon = styled.button`
   } */
 
   & svg {
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 2.4rem;
+    height: 2.4rem;
     /* color: var(--color-brand-600); */
   }
 `;
 
-const ButtonIcon = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <StyledButtonIcon sx={{ "&:hover": { color: "text" } }}>
-      {children}
-    </StyledButtonIcon>
-  );
-};
+// const ButtonIcon = ({ children }: { children: React.ReactNode }) => {
+//   return (
+//     <StyledButtonIcon sx={{ "&:hover": { color: "text" } }}>
+//       {children}
+//     </StyledButtonIcon>
+//   );
+// };
 
 export default ButtonIcon;
