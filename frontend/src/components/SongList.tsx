@@ -8,6 +8,7 @@ import { Song } from "song";
 import SongCard from "./SongCard";
 import Filter from "./Filter";
 import { useParams, useSearchParams } from "react-router-dom";
+import SearchResult from "./SearchResult";
 
 const Songs = styled.div`
   display: grid;
@@ -33,16 +34,6 @@ function SongList() {
     dispatch(fetchSongsRequest({ filter, sortBy, query }));
   }, [filter, sortBy, query.value]);
 
-  // const filteredSongs = songs.filter(
-  //   (song) =>
-  //     (filter.genre
-  //       ? song.genre.toLowerCase().includes(filter.genre.toLowerCase())
-  //       : true) &&
-  //     (filter.artist
-  //       ? song.artist.toLowerCase().includes(filter.artist.toLowerCase())
-  //       : true)
-  // );
-
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -50,17 +41,20 @@ function SongList() {
     <div sx={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
       <Filter
         options={[
-          { label: "All", value: "all" },
+          { label: "All", value: "" },
           { label: "Artist", value: "artist" },
           { label: "Album", value: "album" },
+          { label: "Genre", value: "genre" },
         ]}
       />
 
-      <Songs>
+      {/* <Songs>
         {songs.map((song: Song) => (
           <SongCard key={song.id} song={song} />
         ))}
-      </Songs>
+      </Songs> */}
+
+      <SearchResult />
     </div>
   );
 }

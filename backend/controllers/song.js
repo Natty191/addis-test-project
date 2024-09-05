@@ -46,40 +46,51 @@ const getSongs = asyncHandler(async (req, res) => {
     let songsAlbum = [];
     let songsGenre = [];
 
-    if (query.filter === "title") {
+    if (!query.filter || query.filter === "all") {
       songsTitle = await Song.find({
-        title: { $regex: `${query.value}`, $options: "i" },
+        title: { $regex: `${query.value.replace(" ", " | ")}`, $options: "i" },
       });
     }
     if (query.filter === "artist") {
       songsArtist = await Song.find({
-        artist: { $regex: `${query.value}`, $options: "i" },
+        artist: { $regex: `${query.value.replace(" ", " | ")}`, $options: "i" },
       });
     }
     if (query.filter === "album") {
       songsAlbum = await Song.find({
-        album: { $regex: `${query.value}`, $options: "i" },
+        album: { $regex: `${query.value.replace(" ", " | ")}`, $options: "i" },
       });
     }
     if (query.filter === "genre") {
       songsGenre = await Song.find({
-        genre: { $regex: `${query.value}`, $options: "i" },
+        genre: { $regex: `${query.value.replace(" ", " | ")}`, $options: "i" },
       });
     }
 
+    // console.log(
+    //   songsTitle[0]?.title,
+    //   songsArtist[0]?.title,
+    //   songsAlbum[0]?.title,
+    //   songsIndex[0]?.title,
+    //   songsRegex[0]?.title
+    // );
+
     const songs = [
-      ...new Set([
-        ...songsTitle,
-        ...songsArtist,
-        ...songsAlbum,
-        ...songsGenre,
-        ...songsIndex,
-        ...songsRegex,
-      ]),
+      ...songsTitle,
+      ...songsArtist,
+      ...songsAlbum,
+      ...songsGenre,
+      ...songsIndex,
+      ...songsRegex,
     ];
+
+    const filtered = {
+      filtered: [...songsTitle, ...songsArtist, ...songsAlbum, ...songsGenre],
+      all: [...songsIndex, ...songsRegex],
+    };
     // console.log(songsIndex, songsRegex);
 
-    res.status(200).json(songs);
+    res.status(200).json(filtered);
   } catch (error) {
     res.status(500);
 

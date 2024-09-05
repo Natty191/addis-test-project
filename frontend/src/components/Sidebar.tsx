@@ -41,7 +41,7 @@ const Sidebar = ({ isDrawerOpen }: { isDrawerOpen: boolean }) => {
         justifyContent: "space-between",
 
         height: "calc(100vh - 5.7rem)",
-        color: "lightgrey",
+        color: "lightergrey",
         background: "background",
 
         position: ["absolute", isDrawerOpen ? "static" : "absolute", "static"],
@@ -94,7 +94,7 @@ const Sidebar = ({ isDrawerOpen }: { isDrawerOpen: boolean }) => {
           background: "background",
           borderTop: `2px solid ${props.colors?.grey}`,
           borderBottom: `2px solid ${props.colors?.grey}`,
-          color: "lightgrey",
+          color: "lightergrey",
 
           "&:hover": {
             background: "grey",

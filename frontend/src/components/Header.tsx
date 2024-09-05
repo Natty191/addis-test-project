@@ -29,7 +29,7 @@ const Header = ({
     <StyledHeader
       sx={{
         background: "background",
-        color: "lightgrey",
+        color: "lightergrey",
         boxShadow: "small",
         paddingInline: [0],
 

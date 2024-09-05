@@ -79,7 +79,7 @@ const NavList = ({ title, children }: NavListProps) => {
   return (
     <StyledNavList
       sx={{
-        color: "lightgrey",
+        color: "lightergrey",
       }}
     >
       <NavHeader

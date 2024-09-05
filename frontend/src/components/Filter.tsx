@@ -7,11 +7,11 @@ type ButtonProps = {
 };
 
 const StyledFilter = styled.div`
-  border: 1px solid var(--color-grey-100);
-  background-color: var(--color-grey-0);
+  /* border: 1px solid var(--color-grey-100); */
+  /* background-color: var(--color-grey-0); */
   box-shadow: var(--shadow-sm);
-  border-radius: var(--border-radius-sm);
-  padding: 0.4rem 1.4rem;
+  /* border-radius: var(--border-radius-sm); */
+  padding: 0.4rem 0rem;
   display: flex;
   gap: 0.5rem;
 `;
@@ -39,14 +39,7 @@ function Filter({ options }: { options: { value: string; label: string }[] }) {
   }
 
   return (
-    <StyledFilter
-      sx={(props) => ({
-        border: `1px solid ${props.colors?.grey}`,
-        background: "darkgrey",
-        boxShadow: "small",
-        borderRadius: "small",
-      })}
-    >
+    <StyledFilter>
       {options.map((option) => (
         <FilterButton
           key={option.value}
@@ -55,7 +48,8 @@ function Filter({ options }: { options: { value: string; label: string }[] }) {
           disabled={option.value === currentFilter}
           sx={{
             background: option.value === currentFilter ? "primary" : "darkgrey",
-            color: option.value === currentFilter ? "background" : "lightgrey",
+            color:
+              option.value === currentFilter ? "background" : "lightergrey",
 
             "&:hover:not(:disabled)": {
               background: "grey",

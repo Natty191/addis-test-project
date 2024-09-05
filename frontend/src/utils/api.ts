@@ -12,6 +12,7 @@ export const fetchSongsAPI = ({
   sort: string;
   query: { filter: string | undefined; value: string };
 }) => axios.get(`${API_BASE_URL}/songs`, { params: { filter, sort, query } });
+
 export const addSongAPI = (song: any) =>
   axios.post(`${API_BASE_URL}/songs`, song);
 export const updateSongAPI = (song: any) =>

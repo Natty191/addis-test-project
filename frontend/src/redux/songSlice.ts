@@ -9,13 +9,13 @@ type NewSong = {
 };
 
 type SongState = {
-  songs: Song[];
+  songs: { filtered: Song[]; all: Song[] };
   loading: boolean;
   error: string | null;
 };
 
 const initialState: SongState = {
-  songs: [],
+  songs: { filtered: [], all: [] },
   loading: false,
   error: null,
 };
@@ -36,7 +36,10 @@ const songSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    fetchSongsSuccess(state: SongState, action: PayloadAction<Song[]>) {
+    fetchSongsSuccess(
+      state: SongState,
+      action: PayloadAction<{ filtered: Song[]; all: Song[] }>
+    ) {
       state.songs = action.payload;
       state.loading = false;
     },
@@ -50,7 +53,7 @@ const songSlice = createSlice({
       state.error = null;
     },
     addSongSuccess(state: SongState, action: PayloadAction<Song>) {
-      state.songs.push(action.payload);
+      state.songs.all.push(action.payload);
       state.loading = false;
     },
     addSongFailure(state: SongState, action: PayloadAction<string>) {
@@ -59,15 +62,15 @@ const songSlice = createSlice({
     },
 
     updateSong(state: SongState, action: PayloadAction<Song>) {
-      const index = state.songs.findIndex(
+      const index = state.songs.all.findIndex(
         (song: Song) => song.id === action.payload.id
       );
       if (index !== -1) {
-        state.songs[index] = action.payload;
+        state.songs.all[index] = action.payload;
       }
     },
     deleteSong(state: SongState, action: PayloadAction<string>) {
-      state.songs = state.songs.filter(
+      state.songs.all = state.songs.all.filter(
         (song: Song) => song.id !== action.payload
       ) as Song[];
     },

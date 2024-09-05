@@ -78,7 +78,7 @@ const SongCard = ({ song }: { song: Song }) => {
             width: "min-content",
             // mt: 2,
             fontSize: 0,
-            color: "lightgrey",
+            color: "lightergrey",
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",

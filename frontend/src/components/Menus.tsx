@@ -161,7 +161,7 @@ function Button({
       <StyledButton
         onClick={handleClick}
         sx={{
-          color: "lightgrey",
+          color: "lightergrey",
 
           "&:hover": {
             background: "grey",
