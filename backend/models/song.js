@@ -7,6 +7,7 @@ const songSchema = new mongoose.Schema(
       type: String,
       required: [true, "A song must have a title"],
       trim: true,
+      index: true,
     },
     artist: {
       type: String,
@@ -25,6 +26,11 @@ const songSchema = new mongoose.Schema(
     },
   },
   { timestamps: true }
+);
+
+songSchema.index(
+  { title: "text", artist: "text", album: "text", genre: "text" },
+  { weights: { title: 8, artist: 6, album: 6, genre: 2 } }
 );
 
 module.exports = mongoose.model("Song", songSchema);

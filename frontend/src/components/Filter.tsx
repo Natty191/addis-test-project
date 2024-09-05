@@ -1,9 +1,6 @@
 /** @jsxImportSource theme-ui */
-import { useSearchParams } from "react-router-dom";
-// import styled, { css } from "styled-components";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import { background } from "styled-system";
 
 type ButtonProps = {
   active: boolean;
@@ -28,27 +25,17 @@ const FilterButton = styled.button<ButtonProps>`
   /* To give the same height as select */
   padding: 0.44rem 0.8rem;
   transition: all 0.15s;
-
-  /* &:hover:not(:disabled) {
-    background-color: lightblue;
-    color: var(--color-brand-50);
-  } */
 `;
 
-function Filter({
-  filterField,
-  options,
-}: {
-  filterField: string;
-  options: { value: string; label: string }[];
-}) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const currentFilter = searchParams.get(filterField) || options[0].value;
+function Filter({ options }: { options: { value: string; label: string }[] }) {
+  const { filter } = useParams();
+  const currentFilter = filter || options[0].value;
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   function handleClick(value: string) {
-    searchParams.set(filterField, value);
-    if (searchParams.get("page")) searchParams.set("page", "1");
-    setSearchParams(searchParams);
+    navigate(`/search/${value}${location.search}`);
   }
 
   return (

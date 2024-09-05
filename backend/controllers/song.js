@@ -23,7 +23,61 @@ const createSong = asyncHandler(async (req, res) => {
 // Get all songs
 const getSongs = asyncHandler(async (req, res) => {
   try {
-    const songs = await Song.find();
+    const { query, filter, sort } = req.query;
+
+    // Search with no filter
+    const songsIndex = await Song.find(
+      { $text: { $search: query.value } },
+      { score: { $meta: "textScore" } }
+    ).sort({ score: { $meta: "textScore" } });
+
+    const songsRegex = await Song.find({
+      $or: [
+        { title: { $regex: `${query.value}`, $options: "i" } },
+        { artist: { $regex: `${query.value}`, $options: "i" } },
+        { album: { $regex: `${query.value}`, $options: "i" } },
+        { genre: { $regex: `${query.value}`, $options: "i" } },
+      ],
+    });
+
+    // Search with filers
+    let songsTitle = [];
+    let songsArtist = [];
+    let songsAlbum = [];
+    let songsGenre = [];
+
+    if (query.filter === "title") {
+      songsTitle = await Song.find({
+        title: { $regex: `${query.value}`, $options: "i" },
+      });
+    }
+    if (query.filter === "artist") {
+      songsArtist = await Song.find({
+        artist: { $regex: `${query.value}`, $options: "i" },
+      });
+    }
+    if (query.filter === "album") {
+      songsAlbum = await Song.find({
+        album: { $regex: `${query.value}`, $options: "i" },
+      });
+    }
+    if (query.filter === "genre") {
+      songsGenre = await Song.find({
+        genre: { $regex: `${query.value}`, $options: "i" },
+      });
+    }
+
+    const songs = [
+      ...new Set([
+        ...songsTitle,
+        ...songsArtist,
+        ...songsAlbum,
+        ...songsGenre,
+        ...songsIndex,
+        ...songsRegex,
+      ]),
+    ];
+    // console.log(songsIndex, songsRegex);
 
     res.status(200).json(songs);
   } catch (error) {

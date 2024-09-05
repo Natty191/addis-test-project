@@ -18,9 +18,21 @@ import {
 } from "../utils/api";
 
 // Worker saga: will be fired on fetchSongs action
-function* fetchSongsSaga(): Generator<any, void, any> {
+function* fetchSongsSaga(
+  action: PayloadAction<{
+    filter: string;
+    sortBy: string;
+    query: { filter: string | undefined; value: string };
+  }>
+): Generator<any, void, any> {
   try {
-    const response = yield call(fetchSongsAPI);
+    const { query, filter, sortBy } = action.payload;
+    const filterBy =
+      filter === "all" || !filter ? null : { field: "artist", value: filter };
+
+    const sort = sortBy || "createdAt-desc";
+
+    const response = yield call(() => fetchSongsAPI({ filter, sort, query }));
 
     yield put(fetchSongsSuccess(response.data));
   } catch (error: any) {

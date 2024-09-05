@@ -11,7 +11,6 @@ function App() {
   const router = createBrowserRouter(
     [
       {
-        path: "/",
         element: <AppLayout />,
         children: [
           {
@@ -22,6 +21,8 @@ function App() {
             path: "add-song",
             element: <AddSongForm />,
           },
+          { path: "search", element: <SongList /> },
+          { path: "search/:filter", element: <SongList /> },
         ],
       },
     ]
