@@ -44,6 +44,8 @@ const GlobalStyles = () => (
 
       button {
         cursor: pointer;
+        background: none;
+        border: none;
       }
 
       *:disabled {

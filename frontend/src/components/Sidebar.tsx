@@ -15,7 +15,7 @@ const StyledSidebar = styled.aside`
 const Playlist = styled.div`
   padding: 2.4rem;
 
-  a {
+  button {
     display: flex;
     align-items: center;
 

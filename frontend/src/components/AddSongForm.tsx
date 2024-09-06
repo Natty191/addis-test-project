@@ -46,7 +46,7 @@ const Button = styled.button`
   }
 `;
 
-function AddSongForm() {
+const AddSongForm = () => {
   const dispatch = useDispatch();
 
   const [title, setTitle] = useState<string>("Libe Sew");
@@ -122,6 +122,6 @@ function AddSongForm() {
       <Button type="submit">Add Song</Button>
     </Form>
   );
-}
+};
 
 export default AddSongForm;

@@ -1,10 +1,10 @@
 /** @jsxImportSource theme-ui */
 import styled from "@emotion/styled";
-import TopResultCard from "../components/TopResultCard";
-import SongsFoundList from "../components/SongsFoundList";
-import Filter from "../components/Filter";
+import Filter from "./Filter";
+import SongsFoundList from "./SongsFoundList";
+import TitledSection from "./TitledSection";
+import TopResultCard from "./TopResultCard";
 import { useSongs } from "../hooks/useSongs";
-import TitledSection from "../components/TitledSection";
 
 const Row = styled.div`
   display: flex;
@@ -13,11 +13,6 @@ const Row = styled.div`
   /* align-items: stretch; */
   justify-content: stretch;
   padding: 1.25rem 0;
-
-  h3 {
-    font-size: 2.3rem;
-    margin-block: 1.25rem;
-  }
 `;
 
 const SearchResult = () => {
@@ -27,6 +22,7 @@ const SearchResult = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error...{error}</div>;
+
   return (
     <div>
       <Filter

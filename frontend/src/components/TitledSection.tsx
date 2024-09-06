@@ -4,6 +4,11 @@ import styled from "@emotion/styled";
 const StyledTitledSection = styled.div`
   display: flex;
   flex-direction: column;
+
+  > h3 {
+    font-size: 2.3rem;
+    margin-block: 1.25rem;
+  }
 `;
 
 const TitledSection = ({

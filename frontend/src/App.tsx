@@ -3,9 +3,9 @@ import AppLayout from "./layouts/AppLayout";
 import { ThemeUIProvider } from "theme-ui";
 import theme from "./styles/theme";
 import GlobalStyles from "./styles/GlobalStyles";
-import SongsList from "./pages/SongsList";
-import AddSongForm from "./pages/AddSongForm";
-import SearchResult from "./pages/SearchResult";
+import HomePage from "./pages/HomePage";
+import AddSongPage from "./pages/AddSongPage";
+import SearchPage from "./pages/SearchPage";
 // import SongStatistics from './components/SongStatistics';
 
 function App() {
@@ -16,14 +16,14 @@ function App() {
         children: [
           {
             path: "/",
-            element: <SongsList />,
+            element: <HomePage />,
           },
           {
             path: "add-song",
-            element: <AddSongForm />,
+            element: <AddSongPage />,
           },
-          { path: "search", element: <SearchResult /> },
-          { path: "search/:filter", element: <SearchResult /> },
+          { path: "search", element: <SearchPage /> },
+          { path: "search/:filter", element: <SearchPage /> },
         ],
       },
     ]
