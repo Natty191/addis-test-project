@@ -1,10 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import SongList from "./components/SongList";
-import AddSongForm from "./components/AddSongForm";
 import AppLayout from "./layouts/AppLayout";
 import { ThemeUIProvider } from "theme-ui";
 import theme from "./styles/theme";
 import GlobalStyles from "./styles/GlobalStyles";
+import SongsList from "./pages/SongsList";
+import AddSongForm from "./pages/AddSongForm";
+import SearchResult from "./pages/SearchResult";
 // import SongStatistics from './components/SongStatistics';
 
 function App() {
@@ -15,14 +16,14 @@ function App() {
         children: [
           {
             path: "/",
-            element: <SongList />,
+            element: <SongsList />,
           },
           {
             path: "add-song",
             element: <AddSongForm />,
           },
-          { path: "search", element: <SongList /> },
-          { path: "search/:filter", element: <SongList /> },
+          { path: "search", element: <SearchResult /> },
+          { path: "search/:filter", element: <SearchResult /> },
         ],
       },
     ]

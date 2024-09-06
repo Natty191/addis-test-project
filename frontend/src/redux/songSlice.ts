@@ -16,7 +16,7 @@ type SongState = {
 
 const initialState: SongState = {
   songs: { filtered: [], all: [] },
-  loading: false,
+  loading: true,
   error: null,
 };
 

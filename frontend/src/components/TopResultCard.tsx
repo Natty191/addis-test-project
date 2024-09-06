@@ -5,11 +5,11 @@ import { Song } from "song";
 
 const StyledTopResultCard = styled.div`
   padding: 2rem 1.75rem;
-  background: darkgrey;
-  border-radius: 5px;
-  width: 40rem;
+  border-radius: 6px;
+  /* width: 45rem; */
+  width: calc(7rem + 25vw);
+  height: 100%;
   cursor: pointer;
-  /* font-size: 2.6em; */
 
   img {
     margin-bottom: 1.3rem;
@@ -21,8 +21,6 @@ const StyledTopResultCard = styled.div`
   }
 
   p {
-    margin-bottom: 1rem;
-
     a {
       white-space: "nowrap";
       overflow: "hidden";
@@ -47,7 +45,7 @@ const TopResultCard = ({ song }: { song: Song }) => {
       <img
         src="https://assets.audiomack.com/abusha-mesganew/5b54c92aba0c18661df39a814c76d723b612c42eaa642b154f1e16e5fc21d0c6.jpeg?width=1000&height=1000&max=true"
         alt=""
-        sx={{ width: "10rem", borderRadius: "default" }}
+        sx={{ width: "10rem", aspectRatio: 1, borderRadius: "default" }}
       />
 
       <h2>{song.title}</h2>

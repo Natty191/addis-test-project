@@ -1,7 +1,5 @@
 import { useDeferredValue, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
-import { fetchSongsRequest } from "../redux/songSlice";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 export function useSearch(
   initial: string
@@ -15,13 +13,8 @@ export function useSearch(
     () => searchParams.get("query") ?? initial
   );
   const defferedQuery = useDeferredValue(query);
-  const dispatch = useDispatch();
   const location = useLocation();
   const ref = useRef<HTMLInputElement>(null);
-
-  // const filterBy = searchParams.get("filterBy") || "";
-  const { filter } = useParams();
-  const sortBy = searchParams.get("sortBy") || "";
 
   useEffect(() => {
     if (location.pathname.startsWith("/search")) return;
@@ -36,13 +29,6 @@ export function useSearch(
       searchParams.set("query", defferedQuery);
     }
     setSearchParams(searchParams, { replace: true });
-
-    dispatch(
-      fetchSongsRequest({ filter, sortBy, query: { filter, value: query } })
-    );
-
-    // if (defferedQuery.length < 1) return;
-    // navigate("/add-song");
   }, [defferedQuery]);
 
   return [query, setQuery, ref];

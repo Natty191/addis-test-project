@@ -7,7 +7,6 @@ const StyledFlowButtons = styled.div`
   margin-left: 1rem;
 
   span {
-    /* color: rgb(170, 170, 170); */
     margin-left: 1rem;
 
     svg {

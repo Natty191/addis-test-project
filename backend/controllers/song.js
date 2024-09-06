@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Song = require("../models/song");
+const { removeDuplicates } = require("../utils/removeDuplicates");
 
 // Create a new song
 const createSong = asyncHandler(async (req, res) => {
@@ -33,10 +34,18 @@ const getSongs = asyncHandler(async (req, res) => {
 
     const songsRegex = await Song.find({
       $or: [
-        { title: { $regex: `${query.value}`, $options: "i" } },
-        { artist: { $regex: `${query.value}`, $options: "i" } },
-        { album: { $regex: `${query.value}`, $options: "i" } },
-        { genre: { $regex: `${query.value}`, $options: "i" } },
+        {
+          title: { $regex: `${query.value.replace(" ", "|")}`, $options: "i" },
+        },
+        {
+          artist: { $regex: `${query.value.replace(" ", "|")}`, $options: "i" },
+        },
+        {
+          album: { $regex: `${query.value.replace(" ", "|")}`, $options: "i" },
+        },
+        {
+          genre: { $regex: `${query.value.replace(" ", "|")}`, $options: "i" },
+        },
       ],
     });
 
@@ -48,22 +57,22 @@ const getSongs = asyncHandler(async (req, res) => {
 
     if (!query.filter || query.filter === "all") {
       songsTitle = await Song.find({
-        title: { $regex: `${query.value.replace(" ", " | ")}`, $options: "i" },
+        title: { $regex: `${query.value.replace(" ", "|")}`, $options: "i" },
       });
     }
     if (query.filter === "artist") {
       songsArtist = await Song.find({
-        artist: { $regex: `${query.value.replace(" ", " | ")}`, $options: "i" },
+        artist: { $regex: `${query.value.replace(" ", "|")}`, $options: "i" },
       });
     }
     if (query.filter === "album") {
       songsAlbum = await Song.find({
-        album: { $regex: `${query.value.replace(" ", " | ")}`, $options: "i" },
+        album: { $regex: `${query.value.replace(" ", "|")}`, $options: "i" },
       });
     }
     if (query.filter === "genre") {
       songsGenre = await Song.find({
-        genre: { $regex: `${query.value.replace(" ", " | ")}`, $options: "i" },
+        genre: { $regex: `${query.value.replace(" ", "|")}`, $options: "i" },
       });
     }
 
@@ -75,22 +84,18 @@ const getSongs = asyncHandler(async (req, res) => {
     //   songsRegex[0]?.title
     // );
 
-    const songs = [
+    // Removing duplicates
+    const filtered = removeDuplicates([
       ...songsTitle,
       ...songsArtist,
       ...songsAlbum,
       ...songsGenre,
       ...songsIndex,
       ...songsRegex,
-    ];
+    ]);
+    const all = removeDuplicates([...songsIndex, ...songsRegex]);
 
-    const filtered = {
-      filtered: [...songsTitle, ...songsArtist, ...songsAlbum, ...songsGenre],
-      all: [...songsIndex, ...songsRegex],
-    };
-    // console.log(songsIndex, songsRegex);
-
-    res.status(200).json(filtered);
+    res.status(200).json({ filtered, all });
   } catch (error) {
     res.status(500);
 

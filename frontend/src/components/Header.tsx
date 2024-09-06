@@ -8,10 +8,7 @@ import { HiBars3 } from "react-icons/hi2";
 import ButtonIcon from "./ButtonIcon";
 
 const StyledHeader = styled.header`
-  /* background: rgb(40, 40, 40); */
   padding: 1rem 3.5rem;
-  /* color: rgb(170, 170, 170); */
-  /* border-bottom: 1px solid rgb(0, 0, 0); */
 
   display: flex;
   flex-flow: row wrap;
@@ -32,8 +29,6 @@ const Header = ({
         color: "lightergrey",
         boxShadow: "small",
         paddingInline: [0],
-
-        // display: [null, null, "none"],d
 
         button: {
           "&:hover": { color: "text" },
