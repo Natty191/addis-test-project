@@ -35,7 +35,7 @@ function Filter({ options }: { options: { value: string; label: string }[] }) {
   const location = useLocation();
 
   function handleClick(value: string) {
-    navigate(`/search/${value}${location.search}`);
+    navigate(`/search/${value}${location.search}`, { replace: true });
   }
 
   return (

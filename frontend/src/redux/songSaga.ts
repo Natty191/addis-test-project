@@ -8,7 +8,8 @@ import {
   addSongSuccess,
   addSongFailure,
   updateSong,
-  deleteSong,
+  deleteSongRequest,
+  deleteSongSuccess,
 } from "./songSlice";
 import {
   fetchSongsAPI,
@@ -69,7 +70,7 @@ function* deleteSongSaga(action: PayloadAction<string>) {
   try {
     yield call(deleteSongAPI, action.payload);
 
-    yield put(deleteSong(action.payload));
+    yield put(deleteSongSuccess(action.payload));
   } catch (error: any) {
     yield put(fetchSongsFailure(error.message));
   }
@@ -80,5 +81,5 @@ export function* watchSongSagas() {
   yield takeLatest(fetchSongsRequest.type, fetchSongsSaga);
   yield takeLatest(addSongStart.type, addSongSaga);
   yield takeLatest(updateSong.type, updateSongSaga);
-  yield takeLatest(deleteSong.type, deleteSongSaga);
+  yield takeLatest(deleteSongRequest.type, deleteSongSaga);
 }

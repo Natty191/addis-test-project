@@ -1,6 +1,6 @@
 /** @jsxImportSource theme-ui */
 import styled from "@emotion/styled";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Song } from "song";
 
 const StyledTopResultCard = styled.div`
@@ -50,12 +50,12 @@ const TopResultCard = ({ song }: { song: Song }) => {
       }}
     >
       <img
-        src="https://assets.audiomack.com/abusha-mesganew/5b54c92aba0c18661df39a814c76d723b612c42eaa642b154f1e16e5fc21d0c6.jpeg?width=1000&height=1000&max=true"
+        src={`/${!filter || filter === "genre" ? "artist" : filter}.jpg`}
         alt=""
         sx={{ width: "10rem", aspectRatio: 1, borderRadius: "default" }}
       />
 
-      <h2>{song[(filter as keyof Song) ?? "artist"]}</h2>
+      <h2>{song[(filter as keyof Song) ?? "title"]}</h2>
       <p sx={{ color: "lightergrey", fontWeight: "body" }}>
         <span>{capitalize(filter ?? "Song")} &bull;&nbsp;&nbsp;</span>
         <Link to="#" sx={{ color: "lightestgrey", cursor: "pointer" }}>

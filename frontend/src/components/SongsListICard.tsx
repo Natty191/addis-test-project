@@ -38,10 +38,7 @@ const SongsListCard = ({ song }: { song: Song }) => {
         },
       }}
     >
-      <Image
-        src="https://assets.audiomack.com/abusha-mesganew/5b54c92aba0c18661df39a814c76d723b612c42eaa642b154f1e16e5fc21d0c6.jpeg?width=1000&height=1000&max=true"
-        alt=""
-      />
+      <Image src="/song.jpg" alt="" />
       <Links sx={{ color: "lightestgrey" }}>
         <CardLink to="#">{song.title}</CardLink>
         <CardLink

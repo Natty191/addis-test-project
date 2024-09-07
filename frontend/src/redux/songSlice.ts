@@ -63,16 +63,26 @@ const songSlice = createSlice({
 
     updateSong(state: SongState, action: PayloadAction<Song>) {
       const index = state.songs.all.findIndex(
-        (song: Song) => song.id === action.payload.id
+        (song: Song) => song._id === action.payload._id
       );
       if (index !== -1) {
         state.songs.all[index] = action.payload;
       }
     },
-    deleteSong(state: SongState, action: PayloadAction<string>) {
+    deleteSongRequest(state: SongState, action: PayloadAction<string>) {
+      // state.loading = true;
+      state.error = null;
+    },
+    deleteSongSuccess(state: SongState, action: PayloadAction<string>) {
       state.songs.all = state.songs.all.filter(
-        (song: Song) => song.id !== action.payload
+        (song: Song) => song._id !== action.payload
       ) as Song[];
+      // state.loading = false;
+      state.error = null;
+    },
+    deleteSongFailure(state: SongState, action: PayloadAction<string>) {
+      // state.loading = false;
+      state.error = action.payload;
     },
   },
 });
@@ -86,7 +96,9 @@ export const {
   addSongSuccess,
   addSongFailure,
   updateSong,
-  deleteSong,
+  deleteSongRequest,
+  deleteSongSuccess,
+  deleteSongFailure,
 } = songSlice.actions;
 
 // Export reducer

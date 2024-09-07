@@ -24,6 +24,7 @@ const songSchema = new mongoose.Schema(
       required: [true, "A song must have a genre"],
       trim: true,
     },
+    coverUrl: String,
   },
   { timestamps: true }
 );

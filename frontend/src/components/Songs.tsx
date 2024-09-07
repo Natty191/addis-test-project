@@ -30,6 +30,7 @@ const Songs = () => {
   const { songs, loading, error } = useSongs();
 
   const artists = removeDuplicate(songs.all, "artist");
+  const genres = removeDuplicate(songs.all, "genre");
   const albums = removeDuplicate(songs.all, "album");
 
   if (loading) return <p>Loading...</p>;
@@ -51,7 +52,32 @@ const Songs = () => {
       <TitledSection title="Songs">
         <SongsGrid>
           {songs.all.map((song) => (
-            <SongCard key={song._id} song={song} />
+            <SongCard type="song" key={song._id} song={song} />
+          ))}
+        </SongsGrid>
+      </TitledSection>
+      <TitledSection title="Genres">
+        <SongsGrid>
+          {albums.map((song) => (
+            <SongCard
+              type="artist"
+              title={song.genre}
+              subTitle="Genre"
+              key={song._id}
+              song={song}
+            />
+          ))}
+        </SongsGrid>
+      </TitledSection>
+      <TitledSection title="Albums">
+        <SongsGrid>
+          {albums.map((song) => (
+            <SongCard
+              type="album"
+              title={song.album}
+              key={song._id}
+              song={song}
+            />
           ))}
         </SongsGrid>
       </TitledSection>

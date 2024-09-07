@@ -3,6 +3,13 @@ import { Song } from "song";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import CardLink from "./CardLink";
+import { HiTrash } from "react-icons/hi2";
+import Modal from "react-modal";
+import ConfirmDelete from "./ConfirmDelete";
+import { useState } from "react";
+
+import { useDispatch } from "react-redux";
+import { deleteSongRequest } from "../redux/songSlice";
 
 const Card = styled.div<{ type?: string }>`
   padding: 1.4rem;
@@ -41,6 +48,12 @@ const Card = styled.div<{ type?: string }>`
     text-overflow: ellipsis;
     cursor: pointer;
   }
+
+  :hover {
+    button {
+      visibility: visible;
+    }
+  }
 `;
 
 const SongCard = ({
@@ -54,6 +67,14 @@ const SongCard = ({
   title?: string;
   subTitle?: string;
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  function handleConfirmDelete(id: string) {
+    dispatch(deleteSongRequest(id));
+    setIsModalOpen(false);
+  }
+
   return (
     <Card
       type={type}
@@ -63,12 +84,14 @@ const SongCard = ({
             type === "circular"
               ? `linear-gradient(transparent, ${theme.colors?.grey})`
               : "grey",
-          boxShadow: "medium",
+          boxShadow: type == "circular" ? "none" : "medium",
+
+          position: "relative",
         },
       })}
     >
       <img
-        src="https://assets.audiomack.com/abusha-mesganew/5b54c92aba0c18661df39a814c76d723b612c42eaa642b154f1e16e5fc21d0c6.jpeg?width=1000&height=1000&max=true"
+        src={`/${type === "circular" ? "artist" : type}.jpg`}
         alt={song.title}
         sx={{}}
       />
@@ -83,7 +106,11 @@ const SongCard = ({
       >
         <h3>{title ?? song.title}</h3>
         <CardLink
-          to="#"
+          to={
+            type == "circular" || subTitle
+              ? ""
+              : `search/artist?query=${song.artist}`
+          }
           sx={{
             color: "lightergrey",
             fontSize: 0,
@@ -93,13 +120,57 @@ const SongCard = ({
             textOverflow: "ellipsis",
             cursor: "pointer",
             "&:hover": {
-              textDecoration: type === "circular" ? "none" : "underline",
+              textDecoration:
+                type === "circular" || subTitle ? "none" : "underline",
             },
           }}
         >
-          {type === "circular" ? subTitle ?? "Artist" : song.artist}
+          {subTitle ?? (type === "circular" ? "Artist" : song.artist)}
         </CardLink>
       </div>
+      <button
+        onClick={() => setIsModalOpen(true)}
+        sx={{
+          float: "right",
+          visibility: "hidden",
+          zIndex: 100,
+          fontSize: 4,
+          color: "red",
+          borderRadius: "full",
+          background: "grey",
+          overflow: "hidden",
+        }}
+      >
+        <HiTrash color="red" />
+      </button>
+
+      <Modal
+        isOpen={isModalOpen}
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          },
+          content: {
+            background: "rgb(77, 77, 77)",
+            color: "rgb(245, 245, 245)",
+            height: "fit-content",
+            width: "fit-content",
+            margin: "auto",
+          },
+        }}
+      >
+        <ConfirmDelete
+          // capitalize type
+          resourceName={
+            !type || type === "circular"
+              ? "Song"
+              : type[0].toUpperCase() + type.slice(1)
+          }
+          onConfirm={() => handleConfirmDelete(song._id)}
+          onCloseModal={() => setIsModalOpen(false)}
+          disabled={false}
+        />
+      </Modal>
     </Card>
   );
 };
