@@ -2,6 +2,7 @@
 import styled from "@emotion/styled";
 import { Song } from "song";
 import SongsListCard from "./SongsListICard";
+import { ThemeUIStyleObject } from "theme-ui";
 
 const StyledSongsFoundList = styled.div`
   display: flex;
@@ -12,9 +13,15 @@ const StyledSongsFoundList = styled.div`
   }
 `;
 
-const SongsFoundList = ({ songs }: { songs: Song[] }) => {
+const SongsFoundList = ({
+  songs,
+  ...rest
+}: {
+  songs: Song[];
+  sx: ThemeUIStyleObject<any>;
+}) => {
   return (
-    <StyledSongsFoundList>
+    <StyledSongsFoundList {...rest}>
       {songs.slice(0, 4).map((song) => (
         <SongsListCard key={song._id} song={song} />
       ))}

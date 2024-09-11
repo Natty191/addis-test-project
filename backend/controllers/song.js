@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Song = require("../models/song");
 const { removeDuplicates } = require("../utils/removeDuplicates");
+const { getAccessToken } = require("../utils/getSpotifyAccessToke");
 
 // Create a new song
 const createSong = asyncHandler(async (req, res) => {
@@ -129,6 +130,28 @@ const getSongs = asyncHandler(async (req, res) => {
   }
 });
 
+// search Song using spotify api
+const searchSongToAdd = asyncHandler(async (req, res) => {
+  const { title, artist, album, genre } = req.query;
+
+  const token = await getAccessToken();
+  const query = querystring.stringify({
+    q: `title:${title} artist:${artist} album:${album} genre:${genre}`,
+    type: "track",
+    limit: 4,
+  });
+
+  const url = `https://api.spotify.com/v1/search?q=${query}`;
+
+  const response = await axios.get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  res.json(response.data.tracks.items);
+});
+
 // Get a song by ID
 const getSongById = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -224,6 +247,7 @@ const getSongStatistics = asyncHandler(async (req, res) => {
 module.exports = {
   createSong,
   getSongs,
+  searchSongToAdd,
   getSongById,
   updateSong,
   deleteSong,

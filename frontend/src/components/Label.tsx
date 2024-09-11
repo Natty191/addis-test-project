@@ -9,13 +9,13 @@ const StyledLabel = styled.label`
   -webkit-backface-visibility: "hidden";
   pointer-events: none;
 
-  transform: translateY(6px);
+  transform: translateY(0.3em);
   /* left: 13px; */
-  font-size: 22px;
+  font-size: 2.1em;
   &.active {
-    transform: translateY(50px);
+    transform: translateY(2.7em);
     left: 2px;
-    font-size: 14px;
+    font-size: 1.5em;
   }
 `;
 

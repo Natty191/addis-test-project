@@ -38,10 +38,11 @@ const HeaderMunu = () => {
             // gap: ".5rem",
           }}
         >
-          <Button onClick={() => dispatch(switchAuth("signup"))}>
+          <Button size="medium" onClick={() => dispatch(switchAuth("signup"))}>
             Sign up
           </Button>
           <Button
+            size="medium"
             onClick={() => dispatch(switchAuth("login"))}
             variation="link"
           >

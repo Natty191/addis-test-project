@@ -38,6 +38,7 @@ const SongsListCard = ({ song }: { song: Song }) => {
   return (
     <SongCard
       sx={{
+        background: "darkgrey",
         ":hover": {
           background: "grey",
         },

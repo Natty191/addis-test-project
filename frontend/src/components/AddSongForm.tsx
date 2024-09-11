@@ -1,142 +1,116 @@
 /** @jsxImportSource theme-ui */
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addSongStart } from "../redux/songSlice";
 import styled from "@emotion/styled";
+import Button from "./Button";
+import H1 from "./H1";
+import Input from "./Input";
+import Label from "./Label";
+import { useForm } from "react-hook-form";
+import { closeAuthModal } from "../redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import FormError from "./FormError";
+import { Song } from "song";
+import { addSongStart } from "../redux/songSlice";
+import SongsFoundList from "./SongsFoundList";
+import { RootState } from "../redux/store";
+import { useEffect } from "react";
 
-const StyledAddSong = styled.div`
-  margin-block: auto;
-`;
-
-const Form = styled.form`
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  border-radius: 8px;
-  /* box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); */
-  background: "grey";
-
-  h2 {
-    text-align: center;
-    font-size: 1.6rem;
-    margin-bottom: 2rem;
-  }
-`;
-
-const FormGroup = styled.div`
-  margin-bottom: 16px;
-`;
-
-const Input = styled.input`
-  border: none;
-  width: 100%;
-  padding: 0.6rem 1.4rem;
-  /* border: 1px solid #ccc; */
-  border-radius: 10rem;
-  background: rgba(255, 255, 255, 0.1);
-  font-size: 16px;
-  margin-bottom: 0.8rem;
-
-  :focus {
-    outline: 2px solid green;
-  }
-
-  ::placeholder {
-    color: "#838383";
-  }
-`;
-
-const Button = styled.button`
-  width: 100%;
-  padding: 10px;
-  background-color: #192e16;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #0056b3;
-  }
+const InputWrap = styled.div`
+  position: relative;
 `;
 
 const AddSongForm = () => {
   const dispatch = useDispatch();
+  const { songs } = useSelector((state: RootState) => state.songs);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Song>();
 
-  const [title, setTitle] = useState<string>("");
-  const [artist, setArtist] = useState<string>("");
-  const [album, setAlbum] = useState<string>("");
-  const [genre, setGenre] = useState<string>("");
+  function onSubmit(data: Song) {
+    dispatch(addSongStart(data));
+    dispatch(closeAuthModal());
+  }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const newSong = {
-      title,
-      artist,
-      album,
-      genre,
-    };
-
-    dispatch(addSongStart(newSong));
-
-    // Clear form after submission
-    setTitle("");
-    setArtist("");
-    setAlbum("");
-    setGenre("");
-  };
+  useEffect(() => {}, []);
 
   return (
-    <Form onSubmit={handleSubmit} sx={{ color: "lightestgrey" }}>
-      <h2>Create Song</h2>
-      <FormGroup>
+    <form
+      sx={{
+        width: "35rem",
+        marginInline: "auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: "3em",
+        fontSize: "1rem",
+      }}
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <H1>Create Song</H1>
+      <InputWrap>
+        {errors.title && <FormError>{errors.title.message}</FormError>}
+        <Label>Title</Label>
         <Input
-          id="title"
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Title"
-          required
+          register={register("title", { required: "Title is required" })}
+          type="title"
         />
-      </FormGroup>
+      </InputWrap>
 
-      <FormGroup>
+      <InputWrap>
+        {errors.artist && <FormError>{errors.artist.message}</FormError>}
+        <Label>Artist</Label>
         <Input
-          id="artist"
-          type="text"
-          value={artist}
-          onChange={(e) => setArtist(e.target.value)}
-          placeholder="Artist"
-          required
+          register={register("artist", {
+            required: "Artist is required",
+          })}
+          type="artist"
         />
-      </FormGroup>
+        <SongsFoundList
+          sx={{
+            position: "absolute",
+            zIndex: 10,
+            right: 0,
+            "> div": { bg: "lightgrey" },
+          }}
+          songs={songs.all}
+        />
+      </InputWrap>
 
-      <FormGroup>
+      <InputWrap>
+        {errors.album && <FormError>{errors.album.message}</FormError>}
+        <Label>Album</Label>
         <Input
-          id="album"
-          type="text"
-          value={album}
-          onChange={(e) => setAlbum(e.target.value)}
-          placeholder="Album"
-          required
+          register={register("album", {
+            required: "Album is required",
+          })}
+          type="album"
         />
-      </FormGroup>
+      </InputWrap>
 
-      <FormGroup>
+      <InputWrap>
+        {errors.genre && <FormError>{errors.genre.message}</FormError>}
+        <Label>Genre</Label>
         <Input
-          id="genre"
-          type="text"
-          value={genre}
-          onChange={(e) => setGenre(e.target.value)}
-          placeholder="Genre"
-          required
+          register={register("genre", {
+            required: "Genre is required",
+          })}
+          type="genre"
         />
-      </FormGroup>
+      </InputWrap>
 
-      <Button type="submit">Add Song</Button>
-    </Form>
+      <Button
+        type="submit"
+        size="large"
+        sx={{
+          width: "100%",
+          marginTop: "auto",
+          padding: "1rem 0",
+          fontSize: "2rem",
+        }}
+      >
+        Sign Up
+      </Button>
+    </form>
   );
 };
 

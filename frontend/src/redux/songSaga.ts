@@ -10,12 +10,16 @@ import {
   updateSong,
   deleteSongRequest,
   deleteSongSuccess,
+  searchSongToCreateRequst,
+  searchSongToCreateFailure,
+  searchSongToCreateSuccess,
 } from "./songSlice";
 import {
   fetchSongsAPI,
   addSongAPI,
   updateSongAPI,
   deleteSongAPI,
+  searchToAddAPI,
 } from "../utils/api";
 import { toast } from "react-toastify";
 
@@ -42,14 +46,26 @@ function* fetchSongsSaga(
   }
 }
 
+// Worker saga: seaching for a song before creating
+function* searchSongToAddSaga(
+  action: PayloadAction<any>
+): Generator<any, void, any> {
+  try {
+    const response = yield call(searchToAddAPI, action.payload);
+    put(searchSongToCreateSuccess(response.data));
+  } catch (error: any) {
+    yield put(searchSongToCreateFailure(error.message));
+  }
+}
+
 // Worker saga: will be fired on addSong action
 function* addSongSaga(action: PayloadAction<any>): Generator<any, void, any> {
   try {
     const response = yield call(addSongAPI, action.payload);
 
-    yield put(addSongSuccess(response.data)); // Assuming the API returns the added song
+    yield put(addSongSuccess(response.data));
   } catch (error: any) {
-    yield put(addSongFailure(error.message)); // Reusing error handling
+    yield put(addSongFailure(error.message));
   }
 }
 
@@ -81,6 +97,7 @@ function* deleteSongSaga(action: PayloadAction<string>) {
 // Watcher saga
 export default function* songSaga() {
   yield takeLatest(fetchSongsRequest.type, fetchSongsSaga);
+  yield takeLatest(searchSongToCreateRequst.type, searchSongToAddSaga);
   yield takeLatest(addSongStart.type, addSongSaga);
   yield takeLatest(updateSong.type, updateSongSaga);
   yield takeLatest(deleteSongRequest.type, deleteSongSaga);

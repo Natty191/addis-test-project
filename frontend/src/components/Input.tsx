@@ -1,16 +1,15 @@
 /** @jsxImportSource theme-ui */
 import { UseFormRegister } from "react-hook-form";
-import { SignupFormInputs } from "./Signup";
 
 const Input: React.FC<
   React.InputHTMLAttributes<HTMLInputElement> & {
-    register?: ReturnType<UseFormRegister<SignupFormInputs>>;
+    register?: ReturnType<UseFormRegister<any>>;
   }
 > = ({
   register,
   ...props
 }: {
-  register?: ReturnType<UseFormRegister<SignupFormInputs>>;
+  register?: ReturnType<UseFormRegister<any>>;
 }) => {
   const onInputFill = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length > 0) {
@@ -29,7 +28,7 @@ const Input: React.FC<
       {...register}
       {...props}
       sx={{
-        fontSize: "1.7em",
+        fontSize: "2.1em",
         display: "block",
         width: "100%",
         height: "100%",

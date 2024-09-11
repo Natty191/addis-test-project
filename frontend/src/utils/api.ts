@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Song } from "song";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:4000/api";
@@ -12,6 +13,11 @@ export const fetchSongsAPI = ({
   sort: string;
   query: { filter: string | undefined; value: string };
 }) => axios.get(`${API_BASE_URL}/songs`, { params: { filter, sort, query } });
+
+export const searchToAddAPI = ({ title, artist, album, genre }: Song) =>
+  axios.get(`${API_BASE_URL}songs/search`, {
+    params: { title, artist, album, genre },
+  });
 
 export const addSongAPI = (song: any) =>
   axios.post(`${API_BASE_URL}/songs`, song);

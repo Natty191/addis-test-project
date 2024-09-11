@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
 import { Song } from "song";
 
 type NewSong = {
@@ -11,12 +10,14 @@ type NewSong = {
 
 type SongState = {
   songs: { filtered: Song[]; all: Song[] };
+  songsFound: Song[];
   loading: boolean;
   error: string | null;
 };
 
 const initialState: SongState = {
   songs: { filtered: [], all: [] },
+  songsFound: [],
   loading: true,
   error: null,
 };
@@ -27,7 +28,7 @@ const songSlice = createSlice({
   initialState,
   reducers: {
     fetchSongsRequest(
-      state: SongState,
+      state,
       action: PayloadAction<{
         filter: string | undefined;
         sortBy: string;
@@ -38,31 +39,42 @@ const songSlice = createSlice({
       state.error = null;
     },
     fetchSongsSuccess(
-      state: SongState,
+      state,
       action: PayloadAction<{ filtered: Song[]; all: Song[] }>
     ) {
       state.songs = action.payload;
       state.loading = false;
     },
-    fetchSongsFailure(state: SongState, action: PayloadAction<string>) {
+    fetchSongsFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    addSongStart(state: SongState, _action: PayloadAction<NewSong>) {
+    searchSongToCreateRequst(state, _action: PayloadAction<NewSong>) {
       state.loading = true;
       state.error = null;
     },
-    addSongSuccess(state: SongState, action: PayloadAction<Song>) {
+    searchSongToCreateSuccess(state, action: PayloadAction<any[]>) {
+      state.loading = false;
+      state.songsFound = action.payload;
+    },
+    searchSongToCreateFailure(state, action: PayloadAction<string>) {
+      state.loading = true;
+      state.error = action.payload;
+    },
+    addSongStart(state, _action: PayloadAction<NewSong>) {
+      state.loading = true;
+      state.error = null;
+    },
+    addSongSuccess(state, action: PayloadAction<Song>) {
       state.songs.all.push(action.payload);
       state.loading = false;
     },
-    addSongFailure(state: SongState, action: PayloadAction<string>) {
+    addSongFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
     },
 
-    updateSong(state: SongState, action: PayloadAction<Song>) {
+    updateSong(state, action: PayloadAction<Song>) {
       const index = state.songs.all.findIndex(
         (song: Song) => song._id === action.payload._id
       );
@@ -70,11 +82,11 @@ const songSlice = createSlice({
         state.songs.all[index] = action.payload;
       }
     },
-    deleteSongRequest(state: SongState, action: PayloadAction<string>) {
+    deleteSongRequest(state, action: PayloadAction<string>) {
       // state.loading = true;
       state.error = null;
     },
-    deleteSongSuccess(state: SongState, action: PayloadAction<string>) {
+    deleteSongSuccess(state, action: PayloadAction<string>) {
       state.songs.all = state.songs.all.filter(
         (song: Song) => song._id !== action.payload
       );
@@ -85,7 +97,7 @@ const songSlice = createSlice({
       // state.loading = false;
       state.error = null;
     },
-    deleteSongFailure(state: SongState, action: PayloadAction<string>) {
+    deleteSongFailure(state, action: PayloadAction<string>) {
       // state.loading = false;
       state.error = action.payload;
     },
@@ -97,6 +109,9 @@ export const {
   fetchSongsRequest,
   fetchSongsSuccess,
   fetchSongsFailure,
+  searchSongToCreateRequst,
+  searchSongToCreateSuccess,
+  searchSongToCreateFailure,
   addSongStart,
   addSongSuccess,
   addSongFailure,
