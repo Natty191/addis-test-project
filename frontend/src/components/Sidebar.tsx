@@ -5,6 +5,7 @@ import SidebarNavigation from "./SidebarNavigation";
 import { navigations } from "../data/navigations";
 
 const StyledSidebar = styled.aside`
+  font-size: 1em;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

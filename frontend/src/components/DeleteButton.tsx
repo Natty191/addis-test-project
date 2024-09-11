@@ -4,8 +4,8 @@ import ConfirmDelete from "./ConfirmDelete";
 import { deleteSongRequest } from "../redux/songSlice";
 import { useDispatch } from "react-redux";
 import { HiTrash } from "react-icons/hi2";
-import Modal from "react-modal";
 import { Song } from "song";
+import CenteredModal from "./CenteredModal";
 
 const DeleteButton = ({ song }: { song: Song }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,35 +42,14 @@ const DeleteButton = ({ song }: { song: Song }) => {
       >
         <HiTrash />
       </button>
-      <Modal
-        isOpen={isModalOpen}
-        style={{
-          content: {
-            inset: "auto",
-            margin: "auto",
-            padding: "0",
-            border: "none",
-            background: "none",
-            overflow: "auto",
-            WebkitOverflowScrolling: "touch",
-            borderRadius: "0",
-            outline: "none",
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          },
-        }}
-      >
+      <CenteredModal isOpen={isModalOpen}>
         <ConfirmDelete
-          // capitalize type
           resourceName="Song"
           onConfirm={() => handleConfirmDelete(song._id)}
           onCloseModal={() => setIsModalOpen(false)}
           disabled={false}
         />
-      </Modal>
+      </CenteredModal>
     </>
   );
 };

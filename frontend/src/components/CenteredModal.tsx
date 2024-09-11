@@ -12,14 +12,15 @@ const CenteredModal = (props: Props) => {
         content: {
           padding: 0,
           margin: 0,
-          width: "56rem",
+          // width: "56rem",
+          width: "max-content",
+          height: "max-content",
           top: "50%",
           left: "50%",
           translate: "-50% -50%",
           border: "none",
-          borderRadius: "2rem",
+          borderRadius: 0,
           background: "none",
-          height: "90vh",
         },
         overlay: {
           backdropFilter: "blur(5px)",

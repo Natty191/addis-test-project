@@ -23,9 +23,9 @@ function App() {
         {
           path: "/",
           element: (
-            <ProtectedRoute>
-              <HomePage />
-            </ProtectedRoute>
+            // <ProtectedRoute>
+            <HomePage />
+            // </ProtectedRoute>
           ),
         },
         {

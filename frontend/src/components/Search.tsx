@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 const StyledSearch = styled.div`
   margin: 0 2rem;
   max-width: 20rem;
+  font-size: 1.6rem;
 
   svg {
     position: absolute;

@@ -13,12 +13,12 @@ const FullPage = styled.div`
 `;
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { loading, isAuthenticated } = useSelector(
+  const { loading, isAuthenticated, isModalOpen } = useSelector(
     (state: RootState) => state.auth
   );
   const dispatch = useDispatch();
 
-  if (!loading && !isAuthenticated) dispatch(openAuthModal("login"));
+  if (!loading && !isAuthenticated && !isModalOpen) dispatch(openAuthModal());
 
   useEffect(() => {
     dispatch(getUserRequest());

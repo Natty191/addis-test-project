@@ -2,16 +2,14 @@
 import styled from "@emotion/styled";
 
 const StyledConfirmDelete = styled.div`
-  background-color: #272727;
-  color: #c5c5c5;
   padding: 2rem;
-  width: 40rem;
+  width: 45rem;
+  border-radius: 0.7rem;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
 
   & p {
-    color: var(--color-grey-500);
     margin-bottom: 1.2rem;
   }
 
@@ -34,9 +32,9 @@ function ConfirmDelete({
   onCloseModal: () => void;
 }) {
   return (
-    <StyledConfirmDelete>
+    <StyledConfirmDelete sx={{ bg: "lightgrey", color: "lightestgrey" }}>
       <h3>Delete {resourceName}</h3>
-      <p>
+      <p sx={{ color: "lightergrey" }}>
         Are you sure you want to delete this {resourceName} permanently? This
         action cannot be undone.
       </p>

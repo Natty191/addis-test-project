@@ -2,10 +2,10 @@
 import styled from "@emotion/styled";
 import UserAvatar from "./UserAvatar";
 import Menus from "./Menus";
-import { HiArrowRightOnRectangle, HiSun } from "react-icons/hi2";
+import { HiArrowRightOnRectangle, HiSun, HiUserCircle } from "react-icons/hi2";
 import { useColorMode } from "theme-ui";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutRequest, openAuthModal } from "../redux/authSlice";
+import { logoutRequest, switchAuth } from "../redux/authSlice";
 import { RootState } from "../redux/store";
 import Button from "./Button";
 
@@ -30,20 +30,19 @@ const HeaderMunu = () => {
 
   return (
     <StyledHeaderMenu>
-      {isAuthenticated ? (
-        <UserAvatar />
-      ) : (
+      {isAuthenticated && <UserAvatar />}
+      {!isAuthenticated && (
         <div
           sx={{
-            display: "flex",
+            display: ["none", "flex"],
             // gap: ".5rem",
           }}
         >
-          <Button onClick={() => dispatch(openAuthModal("signup"))}>
+          <Button onClick={() => dispatch(switchAuth("signup"))}>
             Sign up
           </Button>
           <Button
-            onClick={() => dispatch(openAuthModal("login"))}
+            onClick={() => dispatch(switchAuth("login"))}
             variation="link"
           >
             Login
@@ -62,6 +61,14 @@ const HeaderMunu = () => {
           >
             {colorMode !== "light" ? "Light " : "Dark "}Mode
           </Menus.Button>
+          {!isAuthenticated && (
+            <Menus.Button
+              onClick={() => dispatch(switchAuth("login"))}
+              icon={<HiUserCircle />}
+            >
+              Log in
+            </Menus.Button>
+          )}
           {isAuthenticated && (
             <Menus.Button
               onClick={handleLogout}

@@ -8,7 +8,7 @@ const StyledNavList = styled.div`
   flex-flow: column wrap;
   margin-bottom: 1.3rem;
 
-  font-size: 1.6rem;
+  /* font-size: 1.6rem; */
 `;
 
 const NavHeader = styled.div`
@@ -16,7 +16,8 @@ const NavHeader = styled.div`
   align-items: center;
   gap: 0.3rem;
   text-transform: uppercase;
-  font-size: 1.1rem;
+  /* font-size: 1.1rem; */
+  font-size: 0.9em;
   letter-spacing: 0.15rem;
   cursor: pointer;
 
@@ -25,6 +26,7 @@ const NavHeader = styled.div`
 
 const StyledListItem = styled.a`
   padding: 0.5rem 0;
+  font-size: 1.3em;
 
   display: flex;
   flex-flow: row nowrap;

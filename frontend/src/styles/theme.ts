@@ -15,6 +15,8 @@ const theme: Theme = {
     secondary: "#9cf",
     accent: "#f3c",
     muted: "#111",
+    red: "#ff0000",
+    darkred: "rgb(61, 0, 0)",
     modes: {
       light: {
         text: "#000",
@@ -24,6 +26,8 @@ const theme: Theme = {
         lightgrey: "rgb(218,218,218)",
         lightergrey: "rgb(70,70,70)",
         lightestgrey: "rgb(35,35,35)",
+        red: "#ff0000",
+        darkred: "rgb(255, 178, 178)",
         // primary: "#33e",
         secondary: "#639",
         accent: "#f0c",

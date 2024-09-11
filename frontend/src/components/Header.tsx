@@ -6,10 +6,6 @@ import Logo from "./Logo";
 import FlowButton from "./FlowButtons";
 import { HiBars3 } from "react-icons/hi2";
 import ButtonIcon from "./ButtonIcon";
-import LoginPage from "./AuthModal";
-import Modal from "react-modal";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
 
 const StyledHeader = styled.header`
   padding: 1rem 3.5rem;

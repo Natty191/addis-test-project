@@ -24,7 +24,7 @@ const GlobalStyles = () => (
         font-family: Arial, sans-serif;
         /* background-color: rgb(24, 24, 24); */
         /* background-color: rgb(32, 32, 32); */
-        font-size: 1.4rem;
+        font-size: 1.6rem;
 
         overflow-y: hidden;
       }

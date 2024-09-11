@@ -6,7 +6,7 @@ import Input from "./Input";
 import Label from "./Label";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { openAuthModal, signUpRequest } from "../redux/authSlice";
+import { closeAuthModal, signUpRequest } from "../redux/authSlice";
 import FormError from "./FormError";
 
 export type SignupFormInputs = {
@@ -16,7 +16,7 @@ export type SignupFormInputs = {
 };
 
 const InputWrap = styled.div`
-  margin-bottom: 4rem;
+  /* margin-bottom: 4rem; */
   position: relative;
 `;
 
@@ -31,52 +31,61 @@ const Signup = () => {
 
   function onSubmit(data: SignupFormInputs) {
     dispatch(signUpRequest(data));
-    dispatch(openAuthModal(null));
+    dispatch(closeAuthModal());
   }
 
   return (
-    <div id="signup">
+    <form
+      sx={{
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
+        gap: "4rem",
+      }}
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <H1>Sign Up for Free</H1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <InputWrap>
-          {errors.name && <FormError>{errors.name.message}</FormError>}
-          <Label>User Name</Label>
-          <Input
-            register={register("name", { required: "Name is required" })}
-          />
-        </InputWrap>
+      <InputWrap>
+        {errors.name && <FormError>{errors.name.message}</FormError>}
+        <Label>User Name</Label>
+        <Input register={register("name", { required: "Name is required" })} />
+      </InputWrap>
 
-        <InputWrap>
-          {errors.email && <FormError>{errors.email.message}</FormError>}
-          <Label>Email Address</Label>
-          <Input
-            register={register("email", { required: "Email is required" })}
-            autoComplete="username"
-            type="email"
-            required
-          />
-        </InputWrap>
+      <InputWrap>
+        {errors.email && <FormError>{errors.email.message}</FormError>}
+        <Label>Email Address</Label>
+        <Input
+          register={register("email", { required: "Email is required" })}
+          autoComplete="username"
+          type="email"
+          required
+        />
+      </InputWrap>
 
-        <InputWrap>
-          {errors.password && <FormError>{errors.password.message}</FormError>}
-          <Label>Password</Label>
-          <Input
-            register={register("password", {
-              required: "Password is required",
-            })}
-            type="password"
-            required
-          />
-        </InputWrap>
+      <InputWrap>
+        {errors.password && <FormError>{errors.password.message}</FormError>}
+        <Label>Password</Label>
+        <Input
+          register={register("password", {
+            required: "Password is required",
+          })}
+          type="password"
+          required
+        />
+      </InputWrap>
 
-        <Button
-          size="large"
-          sx={{ width: "100%", marginTop: "1rem", padding: "1.5rem 0" }}
-        >
-          Get Started
-        </Button>
-      </form>
-    </div>
+      <Button
+        size="large"
+        sx={{
+          width: "100%",
+          marginTop: "3rem",
+          padding: "1rem 0",
+          fontSize: "2rem",
+        }}
+      >
+        Get Started
+      </Button>
+    </form>
   );
 };
 

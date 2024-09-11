@@ -1,7 +1,7 @@
 /** @jsxImportSource theme-ui */
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { openAuthModal } from "../redux/authSlice";
+import { closeAuthModal, switchAuth } from "../redux/authSlice";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import Signup from "./Signup";
@@ -11,22 +11,27 @@ import { useOutsideClick } from "../hooks/useOutsideClick";
 import { RootState } from "../redux/store";
 
 const FormContainer = styled.div`
+  /* padding: 4rem; */
+  width: 40rem;
+  height: 100vh;
   padding: 4rem;
-  width: 100%;
-  height: 100%;
   border-radius: 4px;
   box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  font-size: 1.1rem;
 `;
 
 const Tabs = styled.ul`
   list-style: none;
   padding: 0;
-  margin: 0 0 4rem 0;
+  /* margin-bottom: 4rem; */
   display: flex;
   border-radius: 10rem;
   overflow: hidden;
-  width: 80%;
-  margin-inline: auto;
+  /* width: 80%; */
+  /* margin-inline: auto; */
 `;
 
 const Tab = styled.li<{ active: boolean }>`
@@ -55,13 +60,15 @@ const Tab = styled.li<{ active: boolean }>`
 `;
 
 const AuthModal: React.FC = () => {
-  const { openAuth } = useSelector((state: RootState) => state.auth);
+  const { openAuth, isModalOpen } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const dispatch = useDispatch();
-  const ref = useOutsideClick(() => dispatch(openAuthModal(null)));
+  const ref = useOutsideClick(() => dispatch(closeAuthModal()));
 
   return (
-    <CenteredModal isOpen={openAuth !== null}>
+    <CenteredModal isOpen={isModalOpen}>
       <FormContainer
         ref={ref}
         sx={{
@@ -78,7 +85,7 @@ const AuthModal: React.FC = () => {
                   color: "lightestgrey",
                 },
               }}
-              onClick={() => dispatch(openAuthModal("signup"))}
+              onClick={() => dispatch(switchAuth("signup"))}
             >
               Sign Up
             </button>
@@ -92,15 +99,15 @@ const AuthModal: React.FC = () => {
                   color: "lightestgrey",
                 },
               }}
-              onClick={() => dispatch(openAuthModal("login"))}
+              onClick={() => dispatch(switchAuth("login"))}
             >
               Log In
             </button>
           </Tab>
         </Tabs>
-        <div sx={{ width: "70%", marginInline: "auto" }}>
-          {openAuth === "login" ? <Login /> : <Signup />}
-        </div>
+        {/* <div sx={{ marginInline: "auto" }}> */}
+        {openAuth === "login" ? <Login /> : <Signup />}
+        {/* </div> */}
       </FormContainer>
     </CenteredModal>
   );

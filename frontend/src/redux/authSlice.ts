@@ -1,6 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getUser } from "../utils/api";
-import { get } from "http";
 
 export type User = {
   _id: string;
@@ -13,7 +11,8 @@ export type AuthState = {
   user: User | null;
   loading: boolean;
   error: string | null;
-  openAuth: string | null;
+  openAuth: string;
+  isModalOpen: boolean;
 };
 
 // TypeScript types for actions
@@ -36,7 +35,8 @@ const initialState: AuthState = {
   user: null,
   loading: true,
   error: null,
-  openAuth: null,
+  openAuth: "login",
+  isModalOpen: false,
 };
 
 const authSlice = createSlice({
@@ -101,11 +101,16 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    openAuthModal(state, action: PayloadAction<string | null>) {
+    switchAuth(state, action: PayloadAction<string>) {
+      state.isModalOpen = true;
       state.openAuth = action.payload;
     },
+    openAuthModal(state) {
+      state.isModalOpen = true;
+    },
     closeAuthModal(state) {
-      state.openAuth = null;
+      // state.openAuth = null;
+      state.isModalOpen = false;
     },
   },
 });
@@ -123,6 +128,7 @@ export const {
   logoutRequest,
   logoutSuccess,
   logoutFailure,
+  switchAuth,
   openAuthModal,
   closeAuthModal,
 } = authSlice.actions;

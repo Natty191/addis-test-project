@@ -7,7 +7,7 @@ const StyledTitledSection = styled.div`
 
   > h3 {
     /* font-size: 2.3rem; */
-    margin-block: 1.25rem;
+    margin-block: 1rem;
   }
 `;
 
@@ -25,7 +25,7 @@ const TitledSection = ({
       sx={{
         flexGrow: grow ? 1 : 0,
         "> h3": {
-          fontSize: ["1.8rem", "2.3rem"],
+          fontSize: ["1.3em", "1.5em"],
         },
       }}
     >
