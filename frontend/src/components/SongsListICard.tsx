@@ -2,6 +2,7 @@
 import styled from "@emotion/styled";
 import { Song } from "song";
 import CardLink from "./CardLink";
+import DeleteButton from "./DeleteButton";
 
 const SongCard = styled.div`
   border-radius: 5px;
@@ -10,6 +11,10 @@ const SongCard = styled.div`
   gap: 1rem;
   padding: 1rem;
   cursor: pointer;
+
+  :hover button {
+    visibility: visible;
+  }
 `;
 
 const Links = styled.div`
@@ -50,6 +55,7 @@ const SongsListCard = ({ song }: { song: Song }) => {
           {song.artist}
         </CardLink>
       </Links>
+      <DeleteButton song={song} />
     </SongCard>
   );
 };

@@ -10,10 +10,7 @@ const StyledLogo = styled(Link)`
 const Logo = () => {
   return (
     <StyledLogo to="/" sx={{ display: ["none", "block"] }}>
-      <img
-        src="https://i.pinimg.com/originals/15/4a/3b/154a3b66f70a24c44e1410c4338572a2.png"
-        alt="Logo"
-      />
+      <img src="/logo.png" alt="Logo" />
     </StyledLogo>
   );
 };

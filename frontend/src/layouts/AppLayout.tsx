@@ -4,6 +4,10 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import styled from "@emotion/styled";
 import { useState } from "react";
+import Modal from "react-modal";
+import LoginPage from "../components/AuthModal";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const StyledAppLayout = styled.div`
   display: grid;
@@ -27,6 +31,7 @@ const Container = styled.div`
 
 const AppLayout = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { isAuthModalOpen } = useSelector((state: RootState) => state.auth);
 
   return (
     <StyledAppLayout
@@ -53,6 +58,33 @@ const AppLayout = () => {
           <Outlet />
         </Container>
       </Main>
+      <Modal
+        style={{
+          content: {
+            inset: "auto",
+            margin: "auto",
+            padding: "0",
+            border: "none",
+            background: "none",
+            overflow: "auto",
+            WebkitOverflowScrolling: "touch",
+            borderRadius: "0",
+            outline: "none",
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          overlay: {
+            backdropFilter: "blur(19px)",
+            background: "rgba(0, 0, 0, 0.5)",
+          },
+        }}
+        isOpen={isAuthModalOpen}
+      >
+        <LoginPage />
+      </Modal>
     </StyledAppLayout>
   );
 };

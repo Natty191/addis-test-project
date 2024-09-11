@@ -39,17 +39,17 @@ export const navigations: NavObject = [
     navigations: [
       {
         text: "Songs",
-        href: "#",
+        href: "/search",
         icon: HiAdjustmentsHorizontal,
       },
       {
         text: "Albums",
-        href: "#",
+        href: "/search/album",
         icon: HiMusicNote,
       },
       {
         text: "Artists",
-        href: "#",
+        href: "/search/artist",
         icon: HiUser,
       },
     ],

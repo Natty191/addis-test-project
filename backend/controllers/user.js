@@ -1,78 +1,92 @@
-const asyncHandler = require("express-async-handler");
-const User = require("../models/user");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const asyncHandler = require("express-async-handler");
+const { validationResult } = require("express-validator");
+const User = require("../models/user");
 const generateToken = require("../utils/generateToken");
 
-// Register user
-const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
-
-  if (!name || !email || !password) {
+// User Signup
+const signup = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
     res.status(400);
-    throw new Error("Please fill in all fields");
+    console.log(errors.array());
+    throw new Error("Validation failed");
   }
 
-  // Check if user already exists
-  const userExists = await User.findOne({ email });
+  const { email, password, name } = req.body;
 
-  if (userExists) {
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
     res.status(400);
     throw new Error("User already exists");
   }
 
-  // Hash password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  // Create user
-  const newUser = {
+  const newUser = new User({
     name,
     email,
     password: hashedPassword,
-  };
+  });
 
-  const user = await User.create(newUser);
+  await newUser.save();
 
-  if (user) {
-    res.status(201).json({ user: newUser, token: generateToken(user._id) });
-  } else {
-    res.status(400);
-    throw new Error("Invalid user data");
-  }
+  const token = generateToken(newUser._id);
+
+  res.cookie("token", token, {
+    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
+    secure: process.env.NODE_ENV === "production" ? true : false,
+  });
+
+  return res.status(201).json({ message: "User created successfully", token });
 });
 
-// Login user
-const loginUser = asyncHandler(async (req, res) => {
+// User Login
+const login = asyncHandler(async (req, res) => {
+  // console.log(req.cookies);
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400);
+    throw new Error("Validation failed");
+  }
+
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
-
-  if (user && (await bcrypt.compare(password, user.password))) {
-    res.status(200).json({
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-      },
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(401);
-    throw new Error("Invalid credentials ");
+  if (!user) {
+    res.status(400);
+    throw new Error("Invalid credentials");
   }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    res.status(400);
+    throw new Error("Invalid credentials");
+  }
+
+  const token = generateToken(user._id);
+
+  res.cookie("token", token, {
+    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
+    secure: process.env.NODE_ENV === "production" ? true : false,
+  });
+
+  return res.status(200).json({ message: "Login successful", token });
 });
 
-const getMe = asyncHandler((req, res) => {
-  const user = {
-    id: req.user._id,
-    email: req.user._email,
-    name: req.user._name,
-  };
+// User Logout
+const logout = asyncHandler(async (req, res) => {
+  res.clearCookie("token");
+  return res.status(200).json({ message: "Logout successful" });
 });
 
-module.exports = {
-  registerUser,
-  loginUser,
-  getMe,
-};
+const getUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).select("-password");
+  return res.status(200).json(user);
+});
+
+module.exports = { signup, login, logout, getUserProfile };

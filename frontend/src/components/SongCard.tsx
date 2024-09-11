@@ -3,13 +3,7 @@ import { Song } from "song";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import CardLink from "./CardLink";
-import { HiTrash } from "react-icons/hi2";
-import Modal from "react-modal";
-import ConfirmDelete from "./ConfirmDelete";
-import { useState } from "react";
-
-import { useDispatch } from "react-redux";
-import { deleteSongRequest } from "../redux/songSlice";
+import DeleteButton from "./DeleteButton";
 
 const Card = styled.div<{ type?: string }>`
   padding: 1.4rem;
@@ -17,7 +11,7 @@ const Card = styled.div<{ type?: string }>`
   overflow: hidden;
   transition: background-color 0.2s linear, transform 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
-  font-size: 1.4rem;
+  font-size: 1.7rem;
 
   cursor: pointer;
 
@@ -40,6 +34,7 @@ const Card = styled.div<{ type?: string }>`
 
   h3 {
     width: min-content;
+    font-size: 1em;
     font-weight: 300;
     font-family: Poppins;
     color: text;
@@ -67,14 +62,6 @@ const SongCard = ({
   title?: string;
   subTitle?: string;
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const dispatch = useDispatch();
-
-  function handleConfirmDelete(id: string) {
-    dispatch(deleteSongRequest(id));
-    setIsModalOpen(false);
-  }
-
   return (
     <Card
       type={type}
@@ -128,49 +115,7 @@ const SongCard = ({
           {subTitle ?? (type === "circular" ? "Artist" : song.artist)}
         </CardLink>
       </div>
-      <button
-        onClick={() => setIsModalOpen(true)}
-        sx={{
-          float: "right",
-          visibility: "hidden",
-          zIndex: 100,
-          fontSize: 4,
-          color: "red",
-          borderRadius: "full",
-          background: "grey",
-          overflow: "hidden",
-        }}
-      >
-        <HiTrash color="red" />
-      </button>
-
-      <Modal
-        isOpen={isModalOpen}
-        style={{
-          overlay: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-          },
-          content: {
-            background: "rgb(77, 77, 77)",
-            color: "rgb(245, 245, 245)",
-            height: "fit-content",
-            width: "fit-content",
-            margin: "auto",
-          },
-        }}
-      >
-        <ConfirmDelete
-          // capitalize type
-          resourceName={
-            !type || type === "circular"
-              ? "Song"
-              : type[0].toUpperCase() + type.slice(1)
-          }
-          onConfirm={() => handleConfirmDelete(song._id)}
-          onCloseModal={() => setIsModalOpen(false)}
-          disabled={false}
-        />
-      </Modal>
+      {type === "song" && <DeleteButton song={song} />}
     </Card>
   );
 };

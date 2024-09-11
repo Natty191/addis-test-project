@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import { Song } from "song";
 
 type NewSong = {
@@ -76,7 +77,11 @@ const songSlice = createSlice({
     deleteSongSuccess(state: SongState, action: PayloadAction<string>) {
       state.songs.all = state.songs.all.filter(
         (song: Song) => song._id !== action.payload
-      ) as Song[];
+      );
+      state.songs.filtered = state.songs.filtered.filter(
+        (song: Song) => song._id !== action.payload
+      );
+
       // state.loading = false;
       state.error = null;
     },

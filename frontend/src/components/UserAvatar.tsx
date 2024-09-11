@@ -1,28 +1,23 @@
 /** @jsxImportSource theme-ui */
 import styled from "@emotion/styled";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { HiUser } from "react-icons/hi2";
 
 const StyledUserAvatar = styled.div`
   align-items: center;
   gap: 0.5rem;
-`;
-
-const Avatar = styled.img`
-  max-width: 3rem;
-  max-height: 3rem;
-  border-radius: 50%;
-  display: inline-block;
   cursor: pointer;
 `;
 
 const UserAvatar = () => {
+  const { user } = useSelector((state: RootState) => state.auth);
+
   return (
-    <StyledUserAvatar sx={{ display: ["none", "flex"] }}>
-      <Avatar
-        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/adam_proPic.jpg"
-        alt="Profile Picture"
-      />
-      <span sx={{ display: ["none", null, "block"] }}>
-        <span>Adam Lowenthal</span>
+    <StyledUserAvatar sx={{ display: ["flex", "flex"] }}>
+      <HiUser size={20} />
+      <span sx={{ display: ["none", "block"] }}>
+        <span>{user?.name}</span>
       </span>
     </StyledUserAvatar>
   );

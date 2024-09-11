@@ -17,6 +17,7 @@ import {
   updateSongAPI,
   deleteSongAPI,
 } from "../utils/api";
+import { toast } from "react-toastify";
 
 // Worker saga: will be fired on fetchSongs action
 function* fetchSongsSaga(
@@ -71,13 +72,14 @@ function* deleteSongSaga(action: PayloadAction<string>) {
     yield call(deleteSongAPI, action.payload);
 
     yield put(deleteSongSuccess(action.payload));
+    toast.success("Song Deleted Successfully");
   } catch (error: any) {
     yield put(fetchSongsFailure(error.message));
   }
 }
 
 // Watcher saga
-export function* watchSongSagas() {
+export default function* songSaga() {
   yield takeLatest(fetchSongsRequest.type, fetchSongsSaga);
   yield takeLatest(addSongStart.type, addSongSaga);
   yield takeLatest(updateSong.type, updateSongSaga);

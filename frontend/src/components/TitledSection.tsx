@@ -24,7 +24,7 @@ const TitledSection = ({
     <StyledTitledSection
       sx={{
         flexGrow: grow ? 1 : 0,
-        h3: {
+        "> h3": {
           fontSize: ["1.8rem", "2.3rem"],
         },
       }}

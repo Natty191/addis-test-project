@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const User = require("../models/user");
 
-const auth = asyncHandler(async (req, res) => {
+const auth = asyncHandler(async (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
@@ -11,10 +11,11 @@ const auth = asyncHandler(async (req, res) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     req.user = await User.findById(decoded.id).select("-password");
   } catch (error) {
+    console.log(error);
     res.status(401);
     throw new Error("Not authorized");
   }

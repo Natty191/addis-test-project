@@ -54,10 +54,10 @@ const Sidebar = ({ isDrawerOpen }: { isDrawerOpen: boolean }) => {
           },
         })}
       >
-        <button>
+        {/* <button>
           <HiOutlinePlusCircle />
           Add Playlist
-        </button>
+        </button> */}
       </Playlist>
     </StyledSidebar>
   );

@@ -35,6 +35,7 @@ const Songs = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
+  if (songs.all.length === 0) return <p>No songs Available</p>;
   return (
     <StyledSongs sx={{ color: "lightestgrey" }}>
       <TitledSection title="Artists">

@@ -61,11 +61,7 @@ const ListItem = ({
 };
 
 const CollapseList = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="collapse in" id="main">
-      {children}
-    </div>
-  );
+  return <div id="main">{children}</div>;
 };
 
 type NavListProps = {

@@ -6,7 +6,7 @@ const connectDB = require("./config/db");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const cloudinary = require("cloudinary").v2;
-
+const cookieParser = require("cookie-parser");
 dotenv.config();
 
 const PORT = 4000;
@@ -23,7 +23,15 @@ cloudinary.config({
 
 const app = express();
 
-app.use(cors());
+app.use(cookieParser());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
