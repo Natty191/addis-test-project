@@ -58,7 +58,7 @@ const songSlice = createSlice({
       state.songsFound = action.payload;
     },
     searchSongToCreateFailure(state, action: PayloadAction<string>) {
-      state.loading = true;
+      state.loading = false;
       state.error = action.payload;
     },
     addSongStart(state, _action: PayloadAction<NewSong>) {

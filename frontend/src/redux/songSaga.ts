@@ -22,6 +22,7 @@ import {
   searchToAddAPI,
 } from "../utils/api";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 // Worker saga: will be fired on fetchSongs action
 function* fetchSongsSaga(
@@ -50,11 +51,17 @@ function* fetchSongsSaga(
 function* searchSongToAddSaga(
   action: PayloadAction<any>
 ): Generator<any, void, any> {
+  const source = axios.CancelToken.source();
+
   try {
-    const response = yield call(searchToAddAPI, action.payload);
-    put(searchSongToCreateSuccess(response.data));
+    const response = yield call(searchToAddAPI, action.payload, source);
+    yield put(searchSongToCreateSuccess(response.data));
   } catch (error: any) {
-    yield put(searchSongToCreateFailure(error.message));
+    if (axios.isCancel(error)) {
+      console.log("request cancelled");
+    } else {
+      yield put(searchSongToCreateFailure(error.message));
+    }
   }
 }
 

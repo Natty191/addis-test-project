@@ -1,15 +1,19 @@
 /** @jsxImportSource theme-ui */
+import { ChangeEventHandler } from "react";
 import { UseFormRegister } from "react-hook-form";
 
 const Input: React.FC<
   React.InputHTMLAttributes<HTMLInputElement> & {
     register?: ReturnType<UseFormRegister<any>>;
+    onChange?: ChangeEventHandler<HTMLInputElement>;
   }
 > = ({
   register,
+  onChange,
   ...props
 }: {
   register?: ReturnType<UseFormRegister<any>>;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
 }) => {
   const onInputFill = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length > 0) {
@@ -46,7 +50,12 @@ const Input: React.FC<
           borderColor: "primary",
         },
       }}
-      onChange={onInputFill}
+      onChange={(e) => {
+        onInputFill(e);
+        if (onChange) {
+          onChange(e);
+        }
+      }}
     />
   );
 };

@@ -1,13 +1,13 @@
 const axios = require("axios");
 const querystring = require("querystring");
 
-const clientId = process.env.SPOTIFY_CLIENT_ID;
-const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-
 let accessToken = null;
 let tokenExpiresAt = null;
 
 async function getAccessToken() {
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+
   if (accessToken && tokenExpiresAt > Date.now()) {
     return accessToken;
   }

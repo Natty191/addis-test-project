@@ -9,10 +9,10 @@ import { closeAuthModal } from "../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import FormError from "./FormError";
 import { Song } from "song";
-import { addSongStart } from "../redux/songSlice";
+import { addSongStart, searchSongToCreateRequst } from "../redux/songSlice";
 import SongsFoundList from "./SongsFoundList";
 import { RootState } from "../redux/store";
-import { useEffect } from "react";
+import { useDeferredValue, useEffect, useState } from "react";
 
 const InputWrap = styled.div`
   position: relative;
@@ -20,39 +20,70 @@ const InputWrap = styled.div`
 
 const AddSongForm = () => {
   const dispatch = useDispatch();
-  const { songs } = useSelector((state: RootState) => state.songs);
+  const { songsFound } = useSelector((state: RootState) => state.songs);
   const {
     register,
     handleSubmit,
+    watch,
+    getValues,
     formState: { errors },
   } = useForm<Song>();
+  const [formData, setFormData] = useState({
+    title: "",
+    artist: "",
+    album: "",
+    genre: "",
+  });
 
-  function onSubmit(data: Song) {
-    dispatch(addSongStart(data));
+  const deferredFormData = useDeferredValue(formData);
+
+  const { title, artist, album, genre } = watch();
+
+  function handleFormChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setFormData((formData) => ({
+      ...formData,
+      [e.target.name]: e.target.value,
+    }));
+    // dispatch(searchSongToCreateRequst(formData));
+  }
+
+  function onSubmit() {
+    // dispatch(addSongStart(data));
     dispatch(closeAuthModal());
   }
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    // const song = getValues();
+
+    dispatch(searchSongToCreateRequst(deferredFormData));
+  }, [deferredFormData, dispatch]);
 
   return (
     <form
       sx={{
         width: "35rem",
-        marginInline: "auto",
+        margin: "3rem auto",
         display: "flex",
         flexDirection: "column",
         gap: "3em",
         fontSize: "1rem",
+        // height: "40rem",
       }}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={onSubmit}
     >
       <H1>Create Song</H1>
       <InputWrap>
         {errors.title && <FormError>{errors.title.message}</FormError>}
         <Label>Title</Label>
         <Input
-          register={register("title", { required: "Title is required" })}
-          type="title"
+          name="title"
+          value={formData.title}
+          onChange={handleFormChange}
+          // register={register("title", { required: "Title is required" })}
+          // type="title"
+          // onChange={() =>
+          //   dispatch(searchSongToCreateRequst({ title, artist, album, genre }))
+          // }
         />
       </InputWrap>
 
@@ -60,10 +91,14 @@ const AddSongForm = () => {
         {errors.artist && <FormError>{errors.artist.message}</FormError>}
         <Label>Artist</Label>
         <Input
-          register={register("artist", {
-            required: "Artist is required",
-          })}
-          type="artist"
+          name="artist"
+          value={formData.artist}
+          onChange={handleFormChange}
+          required
+          // register={register("artist", {
+          //   required: "Artist is required",
+          // })}
+          // type="artist"
         />
         <SongsFoundList
           sx={{
@@ -72,7 +107,7 @@ const AddSongForm = () => {
             right: 0,
             "> div": { bg: "lightgrey" },
           }}
-          songs={songs.all}
+          songs={songsFound}
         />
       </InputWrap>
 
@@ -80,10 +115,14 @@ const AddSongForm = () => {
         {errors.album && <FormError>{errors.album.message}</FormError>}
         <Label>Album</Label>
         <Input
-          register={register("album", {
-            required: "Album is required",
-          })}
-          type="album"
+          name="album"
+          value={formData.album}
+          onChange={handleFormChange}
+          required
+          // register={register("album", {
+          //   required: "Album is required",
+          // })}
+          // type="album"
         />
       </InputWrap>
 
@@ -91,10 +130,13 @@ const AddSongForm = () => {
         {errors.genre && <FormError>{errors.genre.message}</FormError>}
         <Label>Genre</Label>
         <Input
-          register={register("genre", {
-            required: "Genre is required",
-          })}
-          type="genre"
+          value={formData.genre}
+          onChange={handleFormChange}
+          required
+          // register={register("genre", {
+          //   required: "Genre is required",
+          // })}
+          // type="genre"
         />
       </InputWrap>
 
@@ -103,7 +145,7 @@ const AddSongForm = () => {
         size="large"
         sx={{
           width: "100%",
-          marginTop: "auto",
+          marginTop: "2.5rem",
           padding: "1rem 0",
           fontSize: "2rem",
         }}

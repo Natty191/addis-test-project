@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { CancelTokenSource } from "axios";
 import { Song } from "song";
 
 const API_BASE_URL =
@@ -14,9 +14,14 @@ export const fetchSongsAPI = ({
   query: { filter: string | undefined; value: string };
 }) => axios.get(`${API_BASE_URL}/songs`, { params: { filter, sort, query } });
 
-export const searchToAddAPI = ({ title, artist, album, genre }: Song) =>
-  axios.get(`${API_BASE_URL}songs/search`, {
+export const searchToAddAPI = (
+  { title, artist, album, genre }: Song,
+  CancelToken: CancelTokenSource
+) =>
+  axios.get(`${API_BASE_URL}/songs/search`, {
     params: { title, artist, album, genre },
+    withCredentials: true,
+    cancelToken: CancelToken.token,
   });
 
 export const addSongAPI = (song: any) =>

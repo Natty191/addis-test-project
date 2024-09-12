@@ -9,7 +9,6 @@ const signup = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(400);
-    console.log(errors.array());
     throw new Error("Validation failed");
   }
 

@@ -1,4 +1,6 @@
 const asyncHandler = require("express-async-handler");
+const querystring = require("querystring");
+const axios = require("axios");
 const Song = require("../models/song");
 const { removeDuplicates } = require("../utils/removeDuplicates");
 const { getAccessToken } = require("../utils/getSpotifyAccessToke");
@@ -133,15 +135,24 @@ const getSongs = asyncHandler(async (req, res) => {
 // search Song using spotify api
 const searchSongToAdd = asyncHandler(async (req, res) => {
   const { title, artist, album, genre } = req.query;
+  if (!title && !artist && !album && !genre)
+    throw new Error("Validation Error");
 
   const token = await getAccessToken();
   const query = querystring.stringify({
-    q: `title:${title} artist:${artist} album:${album} genre:${genre}`,
+    // q: `title:${title} artist:${artist} album:${album} genre:${genre}`,
+    q:
+      (title ? `track:${title}` : "") +
+      (artist ? ` artist:${artist}` : "") +
+      (album ? ` album:${album}` : "") +
+      (genre ? ` genre:${genre}` : ""),
     type: "track",
     limit: 4,
   });
 
-  const url = `https://api.spotify.com/v1/search?q=${query}`;
+  console.log(query);
+
+  const url = `https://api.spotify.com/v1/search?${query}`;
 
   const response = await axios.get(url, {
     headers: {
@@ -149,7 +160,30 @@ const searchSongToAdd = asyncHandler(async (req, res) => {
     },
   });
 
-  res.json(response.data.tracks.items);
+  // const songs = [
+  //   {
+  //     album: {
+  //       album_type: "album | single",
+  //       images: [{ url: "url" }],
+  //       name: "album title",
+  //     },
+  //     artists: [{ name: "artist name", id: "spotify id" }],
+  //     name: "track title",
+  //     preview_url: "url to preview audio",
+  //   },
+  // ];
+
+  const songsFound = response.data.tracks.items.map((item) => ({
+    album: item.album_type === "single" ? "Single" : item.album.name,
+    artist: item.artists.map((artist) => artist.name).join(", "),
+    title: item.name,
+    genre: "",
+    coverUrls: item.album.images.map((image) => image.url),
+    artistId: item.artists[0].id,
+  }));
+
+  // res.json(response.data.tracks.items);
+  res.json(songsFound);
 });
 
 // Get a song by ID
