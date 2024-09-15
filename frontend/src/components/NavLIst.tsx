@@ -2,6 +2,7 @@
 import styled from "@emotion/styled";
 import React, { useState } from "react";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
+import { Link } from "react-router-dom";
 
 type NavListProps = {
   title: string;
@@ -31,7 +32,7 @@ const NavHeader = styled.div`
   }
 `;
 
-const StyledListItem = styled.a`
+const StyledListItem = styled(Link)`
   padding: 0.5rem 0;
   font-size: 1.3em;
 
@@ -45,15 +46,15 @@ const StyledListItem = styled.a`
 const ListItem = ({
   title,
   icon,
-  href,
+  to,
 }: {
   title: string;
   icon: React.ReactNode;
-  href: string;
+  to: string;
 }) => {
   return (
     <StyledListItem
-      href={href}
+      to={to}
       title={title}
       sx={(props) => ({
         ":hover": {

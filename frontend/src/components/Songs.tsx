@@ -1,6 +1,5 @@
 /** @jsxImportSource theme-ui */
 import styled from "@emotion/styled";
-import { useSongs } from "../hooks/useSongs";
 import SongCard from "./SongCard";
 import TitledSection from "./TitledSection";
 import { RootState } from "../redux/store";
@@ -15,6 +14,7 @@ import {
 import ArtistCard from "./ArtistCard";
 import GenreCard from "./GenreCard";
 import AlbumCard from "./AlbumCard";
+import LoadingCard from "./LoadingCard";
 
 const StyledSongs = styled.div`
   display: flex;
@@ -49,47 +49,54 @@ const Songs = () => {
     dispatch(getPopularArtistsRequest({ limit: 10, page: 1 }));
     dispatch(getPopularAlbumsRequest({ limit: 10, page: 1 }));
     dispatch(getPopularGenresRequest({ limit: 10, page: 1 }));
-  }, []);
-
-  if (
-    loadingPopularArtists ||
-    loadingPopularSongs ||
-    loadingPopularAlbums ||
-    loadingPopularGenres
-  ) {
-    return <p>Loading...</p>;
-  }
+  }, [dispatch]);
 
   return (
     <StyledSongs sx={{ color: "lightestgrey" }}>
-      <TitledSection title="Popular Artists">
-        <SongsGrid>
-          {popularArtists.map((artist) => (
-            <ArtistCard artist={artist} />
-          ))}
-        </SongsGrid>
-      </TitledSection>
-      <TitledSection title="Popular Songs">
-        <SongsGrid>
-          {popularSongs.map((song) => (
-            <SongCard key={song._id} song={song} />
-          ))}
-        </SongsGrid>
-      </TitledSection>
-      <TitledSection title="Popular Genres">
-        <SongsGrid>
-          {popularGenres.map((genre) => (
-            <GenreCard key={genre.genre} genre={genre} />
-          ))}
-        </SongsGrid>
-      </TitledSection>
-      <TitledSection title="Popular Albums">
-        <SongsGrid>
-          {popularAlbums.map((album) => (
-            <AlbumCard key={album.album} album={album} />
-          ))}
-        </SongsGrid>
-      </TitledSection>
+      {popularArtists.length !== 0 && (
+        <TitledSection title="Popular Artists">
+          <SongsGrid>
+            {loadingPopularArtists
+              ? Array.from({ length: 15 }).map(() => (
+                  <LoadingCard type="circular" />
+                ))
+              : popularArtists.map((artist) => <ArtistCard artist={artist} />)}
+          </SongsGrid>
+        </TitledSection>
+      )}
+      {popularSongs.length !== 0 && (
+        <TitledSection title="Popular Songs">
+          <SongsGrid>
+            {loadingPopularSongs
+              ? Array.from({ length: 15 }).map(() => <LoadingCard />)
+              : popularSongs.map((song) => (
+                  <SongCard key={song._id} song={song} />
+                ))}
+          </SongsGrid>
+        </TitledSection>
+      )}
+      {popularGenres.length !== 0 && (
+        <TitledSection title="Popular Genres">
+          <SongsGrid>
+            {loadingPopularGenres
+              ? Array.from({ length: 15 }).map(() => <LoadingCard />)
+              : popularGenres.map((genre) => (
+                  <GenreCard key={genre.genre} genre={genre} />
+                ))}
+          </SongsGrid>
+        </TitledSection>
+      )}
+      {popularAlbums.length !== 0 && (
+        <TitledSection title="Popular Albums">
+          <SongsGrid>
+            {loadingPopularAlbums
+              ? Array.from({ length: 15 }).map(() => <LoadingCard />)
+              : popularAlbums.map((album) => (
+                  <AlbumCard key={album.album} album={album} />
+                ))}
+          </SongsGrid>
+        </TitledSection>
+      )}
     </StyledSongs>
   );
 };

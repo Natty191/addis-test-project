@@ -2,6 +2,7 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import CardLink from "./CardLink";
+import { useState } from "react";
 
 const StyledCard = styled.div<{ type?: string }>`
   padding: 1.4rem;
@@ -23,7 +24,7 @@ const StyledCard = styled.div<{ type?: string }>`
 const Image = styled.div<{ type?: string }>`
   width: 100%;
   aspect-ratio: ${(props) => (props.type === "circular" ? 1 : 1.05)};
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   overflow: hidden;
 
   img {
@@ -77,13 +78,15 @@ const Card = ({
   subTitle,
   subTitleLink,
 }: CardProps) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   return (
     <StyledCard
       sx={(theme) => ({
         "&:hover": {
           background:
             type === "circular"
-              ? `linear-gradient(transparent, ${theme.colors?.grey})`
+              ? `linear-gradient(transparent 50%, ${theme.colors?.grey})`
               : "grey",
           boxShadow: type == "circular" ? "none" : "medium",
 
@@ -91,12 +94,15 @@ const Card = ({
         },
       })}
     >
-      <Image type={type}>
+      <Image type={type} sx={{ bg: "lightgrey" }}>
         <img
+          // sx={{ display: isLoaded ? "block" : "block" }}
           src={imageUrl}
           onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
             (e.target as HTMLImageElement).src = defaultImageUrl;
+            setIsLoaded(true);
           }}
+          onLoad={() => setIsLoaded(true)}
           alt={`Image - ${title}`}
         />
       </Image>

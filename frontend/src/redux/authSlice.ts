@@ -11,6 +11,7 @@ export type AuthState = {
   isAuthenticated: boolean;
   user: User | null;
   loading: boolean;
+  loadingAuth: boolean;
   error: string | null;
   openAuth: string;
   isModalOpen: boolean;
@@ -35,6 +36,7 @@ const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
   loading: true,
+  loadingAuth: false,
   error: null,
   openAuth: "login",
   isModalOpen: false,
@@ -48,30 +50,30 @@ const authSlice = createSlice({
       state: AuthState,
       _action: PayloadAction<LoginRequestPayload>
     ) {
-      state.loading = true;
+      state.loadingAuth = true;
     },
     loginSuccess(state, action: PayloadAction<User>) {
-      state.loading = false;
+      state.loadingAuth = false;
       state.user = action.payload;
       state.isAuthenticated = true;
       state.error = null;
     },
     loginFailure(state, action: PayloadAction<string>) {
-      state.loading = false;
+      state.loadingAuth = false;
       state.isAuthenticated = false;
       state.error = action.payload;
     },
     signUpRequest(state, action: PayloadAction<LoginRequestPayload>) {
-      state.loading = true;
+      state.loadingAuth = true;
     },
     signUpSuccess(state, action: PayloadAction<LoginSuccessPayload>) {
-      state.loading = false;
+      state.loadingAuth = false;
       state.user = action.payload.user;
       state.isAuthenticated = true;
       state.error = null;
     },
     signUpFailure(state, action: PayloadAction<LoginFailurePayload>) {
-      state.loading = false;
+      state.loadingAuth = false;
       state.isAuthenticated = false;
       state.error = action.payload.error;
     },
@@ -81,6 +83,14 @@ const authSlice = createSlice({
     addFavoriteSongRequest(state, action: PayloadAction<string>) {
       // state.loading = true;
       state.user?.favoriteSongs.push(action.payload);
+    },
+    addFavoriteSongFailure(state, action: PayloadAction<string>) {
+      // state.loading = false;
+      if (state.user) {
+        state.user.favoriteSongs = state.user.favoriteSongs.filter(
+          (songId) => songId !== action.payload
+        );
+      }
     },
     removeFavoriteSongRequest(state, action: PayloadAction<string>) {
       // state.loading = true;
@@ -94,9 +104,11 @@ const authSlice = createSlice({
       // state.loading = false;
       state.user = action.payload;
     },
-    addRemoveFavoriteSongFailure(state, action: PayloadAction<string>) {
+    removeFavoriteSongFailure(state, action: PayloadAction<string>) {
       // state.loading = false;
-      state.error = action.payload;
+      if (state.user) {
+        state.user.favoriteSongs.push(action.payload);
+      }
     },
     getUserSuccess(state, action: PayloadAction<User>) {
       state.loading = false;
@@ -149,7 +161,8 @@ export const {
   addFavoriteSongRequest,
   removeFavoriteSongRequest,
   addRemoveFavoriteSongSuccess,
-  addRemoveFavoriteSongFailure,
+  addFavoriteSongFailure,
+  removeFavoriteSongFailure,
   logoutRequest,
   logoutSuccess,
   logoutFailure,

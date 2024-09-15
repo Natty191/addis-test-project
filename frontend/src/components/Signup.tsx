@@ -5,9 +5,11 @@ import H1 from "./H1";
 import Input from "./Input";
 import Label from "./Label";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { closeAuthModal, signUpRequest } from "../redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { signUpRequest } from "../redux/authSlice";
 import FormError from "./FormError";
+import { RootState } from "../redux/store";
+import SpinnerMini from "./SpinnerMiini";
 
 export type SignupFormInputs = {
   name: string;
@@ -26,12 +28,13 @@ const Signup = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<SignupFormInputs>();
+  const { loadingAuth } = useSelector((state: RootState) => state.auth);
 
   const dispatch = useDispatch();
 
   function onSubmit(data: SignupFormInputs) {
     dispatch(signUpRequest(data));
-    dispatch(closeAuthModal());
+    // dispatch(closeAuthModal());
   }
 
   return (
@@ -83,7 +86,7 @@ const Signup = () => {
           fontSize: "2rem",
         }}
       >
-        Get Started
+        {loadingAuth ? <SpinnerMini /> : "Get Started"}
       </Button>
     </form>
   );

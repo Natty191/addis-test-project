@@ -29,6 +29,7 @@ import {
   updateSongSuccess,
   updateSongFailure,
   NewSong,
+  addSongFailure,
 } from "../redux/songSlice";
 import {
   fetchSongsAPI,
@@ -105,9 +106,12 @@ function* addSongSaga(action: PayloadAction<any>): Generator<any, void, any> {
     const response = yield call(addSongAPI, action.payload);
 
     yield put(addSongSuccess(response.data.song));
+    yield put(getPopularArtistsRequest({ limit: 10, page: 1 }));
+    yield put(getPopularAlbumsRequest({ limit: 10, page: 1 }));
+    yield put(getPopularGenresRequest({ limit: 10, page: 1 }));
     toast.success(response.data.message);
   } catch (error: any) {
-    // yield put(addSongFailure(error.message));
+    yield put(addSongFailure(error.message));
     toast.error("Failed to add song");
   }
 }

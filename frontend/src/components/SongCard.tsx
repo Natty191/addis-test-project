@@ -12,52 +12,26 @@ import {
   removeFavoriteSongRequest,
 } from "../redux/authSlice";
 import { useState } from "react";
+import FavoriteButton from "./FavoriteButton";
 
 const StyledSongCard = styled.div`
   position: relative;
 `;
 
-const FavoriteButton = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.5rem;
-  cursor: pointer;
-`;
-
 const SongCard = ({ song }: { song: Song }) => {
-  const { user } = useSelector((state: RootState) => state.auth);
-  const isFavorite = user ? user.favoriteSongs.includes(song._id) : false;
-  const dispatch = useDispatch();
-
-  function addRemoveFavorite() {
-    if (!user) {
-      dispatch(openAuthModal());
-    } else {
-      if (!isFavorite) {
-        dispatch(addFavoriteSongRequest(song._id));
-      } else {
-        dispatch(removeFavoriteSongRequest(song._id));
-      }
-    }
-  }
-
   return (
     <StyledSongCard>
       <Card
         title={song.title}
         subTitle={song.artist}
-        imageUrl={song.coverUrls?.[0] ?? ""}
+        imageUrl={song.coverUrls?.[1] ?? ""}
         defaultImageUrl="/song.jpg"
         subTitleLink={song.artist}
       />
-      <FavoriteButton onClick={addRemoveFavorite} sx={{ color: "primary" }}>
-        {user && user.favoriteSongs.includes(song._id) ? (
-          <HiHeart size={30} />
-        ) : (
-          <HiOutlineHeart size={30} />
-        )}
-      </FavoriteButton>
+      <FavoriteButton
+        sx={{ position: "absolute", right: 0, top: 0 }}
+        songId={song._id}
+      />
     </StyledSongCard>
   );
 };

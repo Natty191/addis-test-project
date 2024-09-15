@@ -44,7 +44,11 @@ function App() {
   return (
     <ThemeUIProvider theme={theme}>
       <GlobalStyles />
-      <ToastContainer toastStyle={{ backgroundColor: "#131313" }} />
+      <ToastContainer
+        autoClose={1000}
+        hideProgressBar={true}
+        toastStyle={{ backgroundColor: "#131313" }}
+      />
       <RouterProvider router={router} />
       <AuthModal />
     </ThemeUIProvider>

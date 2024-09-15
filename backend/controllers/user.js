@@ -33,13 +33,13 @@ const signup = asyncHandler(async (req, res) => {
 
   const token = generateToken(newUser._id);
 
+  delete user.password;
+
   res.cookie("token", token, {
     expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
     sameSite: process.env.NODE_ENV === "production" ? "None" : "Strict",
     secure: process.env.NODE_ENV === "production" ? true : false,
   });
-
-  delete user.password;
 
   return res
     .status(201)

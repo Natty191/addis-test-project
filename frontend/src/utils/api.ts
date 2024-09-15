@@ -86,13 +86,13 @@ export const getUser = () => {
 };
 
 export const addFavoriteSongAPI = (songId: string) => {
-  return axios.put(`${API_BASE_URL}/user/add-favorite/${songId}`, {
+  return axios.put(`${API_BASE_URL}/user/add-favorite/${songId}`, null, {
     withCredentials: true,
   });
 };
 
 export const removeFavoriteSongAPI = (songId: string) => {
-  return axios.put(`${API_BASE_URL}/user/remove-favorite/${songId}`, {
+  return axios.put(`${API_BASE_URL}/user/remove-favorite/${songId}`, null, {
     withCredentials: true,
   });
 };

@@ -241,6 +241,9 @@ const songSlice = createSlice({
       state.songs.filtered = state.songs.filtered.filter(
         (song: Song) => song._id !== action.payload
       );
+      state.mySongs = state.mySongs.filter(
+        (song: Song) => song._id !== action.payload
+      );
       // state.loading = false;
       state.error = null;
     },

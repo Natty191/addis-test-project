@@ -42,7 +42,7 @@ const createSong = asyncHandler(async (req, res) => {
     if (newSong.genre === "") {
       newSong.genre = response.data.genres[0];
     }
-    newSong.artistImage = response.data.images[0].url;
+    newSong.artistImage = response.data.images[1].url;
   }
 
   await newSong.save();

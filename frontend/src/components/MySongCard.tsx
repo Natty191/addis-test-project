@@ -54,7 +54,7 @@ const MySongCard = ({
     >
       {/* <Image src={song.coverUrls[2] ?? "/song.jpg"} alt="" /> */}
       <Image
-        src={song.coverUrls?.[0]}
+        src={song.coverUrls?.[2]}
         onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
           (e.target as HTMLImageElement).src = "/song.jpg";
         }}

@@ -3,6 +3,7 @@ import MySongs from "../components/MySongs";
 import { RootState } from "../redux/store";
 import { useEffect } from "react";
 import { getMySongsRequest } from "../redux/songSlice";
+import Spinner from "../components/Spinner";
 
 const MySongsPage = () => {
   const { mySongs, loading } = useSelector((state: RootState) => state.songs);
@@ -10,9 +11,16 @@ const MySongsPage = () => {
 
   useEffect(() => {
     dispatch(getMySongsRequest());
-  }, []);
+  }, [dispatch]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div style={{ height: "calc(100vh - 10rem)" }}>
+        <Spinner />
+      </div>
+    );
+  if (mySongs.length === 0)
+    return <div style={{ height: "calc(100vh - 10rem)" }}>No songs found</div>;
   return <MySongs songs={mySongs} />;
 };
 

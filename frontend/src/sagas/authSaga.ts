@@ -20,21 +20,28 @@ import {
   logoutRequest,
   logoutSuccess,
   addRemoveFavoriteSongSuccess,
-  addRemoveFavoriteSongFailure,
   addFavoriteSongRequest,
   removeFavoriteSongRequest,
+  addFavoriteSongFailure,
+  removeFavoriteSongFailure,
+  openAuthModal,
+  closeAuthModal,
 } from "../redux/authSlice";
 import songSaga from "./songSaga";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 function* handleLogin(
   action: ReturnType<typeof loginRequest>
 ): Generator<any, void, any> {
   try {
     const response = yield call(() => loginUser(action.payload));
-    yield put(loginSuccess(response.data));
+    yield put(loginSuccess(response.data.user));
+    yield put(closeAuthModal());
+    toast.success("Logged in Successfully");
   } catch (error: any) {
     yield put(loginFailure(error.message));
+    toast.error(error.response.data.message);
   }
 }
 
@@ -44,8 +51,11 @@ function* handleSignUp(
   try {
     const response = yield call(registerUser, action.payload);
     yield put(signUpSuccess({ user: response.data.user }));
+    yield put(closeAuthModal());
+    toast.success("Signed up successfully");
   } catch (error: any) {
     yield put(signUpFailure({ error: error.message }));
+    toast.error(error.response.data.message);
   }
 }
 
@@ -63,9 +73,14 @@ function* addFavoriteSaga(
 ): Generator<any, void, any> {
   try {
     const response = yield call(addFavoriteSongAPI, action.payload);
-    put(addRemoveFavoriteSongSuccess(response.data.user));
+    yield put(addRemoveFavoriteSongSuccess(response.data.user));
+    toast.success("Added to favorites", {
+      autoClose: 1000,
+      hideProgressBar: true,
+    });
   } catch (error: any) {
-    put(addRemoveFavoriteSongFailure(error.message));
+    yield put(addFavoriteSongFailure(action.payload));
+    toast.error("Could not add to favorites");
     // Handle error
   }
 }
@@ -75,9 +90,14 @@ function* removeFavoriteSaga(
 ): Generator<any, void, any> {
   try {
     const response = yield call(removeFavoriteSongAPI, action.payload);
-    put(addRemoveFavoriteSongSuccess(response.data.user));
+    yield put(addRemoveFavoriteSongSuccess(response.data.user));
+    toast.success("Removed from favorites", {
+      autoClose: 1000,
+      hideProgressBar: true,
+    });
   } catch (error: any) {
-    put(addRemoveFavoriteSongFailure(error.message));
+    yield put(removeFavoriteSongFailure(action.payload));
+    toast.error("Could not remove from favorites");
     // Handle error
   }
 }

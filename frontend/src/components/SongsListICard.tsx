@@ -4,6 +4,7 @@ import { Song } from "song";
 import CardLink from "./CardLink";
 import DeleteButton from "./DeleteButton";
 import React from "react";
+import FavoriteButton from "./FavoriteButton";
 
 const SongCard = styled.div`
   border-radius: 5px;
@@ -12,6 +13,7 @@ const SongCard = styled.div`
   gap: 1rem;
   padding: 1rem;
   cursor: pointer;
+  position: relative;
 
   :hover button {
     visibility: visible;
@@ -37,8 +39,12 @@ const Image = styled.img`
 
 const SongsListCard = ({
   song,
+  withFavButton,
   ...rest
-}: { song: Song } & React.HTMLAttributes<HTMLDivElement>) => {
+}: {
+  song: Song;
+  withFavButton?: boolean;
+} & React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <SongCard
       {...rest}
@@ -51,7 +57,7 @@ const SongsListCard = ({
     >
       {/* <Image src={song.coverUrls[2] ?? "/song.jpg"} alt="" /> */}
       <Image
-        src={song.coverUrls?.[0]}
+        src={song.coverUrls?.[2]}
         onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
           (e.target as HTMLImageElement).src = "/song.jpg";
         }}
@@ -67,7 +73,13 @@ const SongsListCard = ({
           {song.artist}
         </CardLink>
       </Links>
-      <DeleteButton songId={song._id} />
+      {withFavButton && (
+        <FavoriteButton
+          sx={{ position: "absolute", right: "1.5rem" }}
+          size={20}
+          songId={song._id}
+        />
+      )}
     </SongCard>
   );
 };

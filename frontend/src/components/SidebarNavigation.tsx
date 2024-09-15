@@ -18,7 +18,7 @@ const SidebarNavigation = ({ navigations }: { navigations: NavObject }) => {
           {nav.navigations.map((item) => (
             <NavList.Item
               key={item.text}
-              href={item.href}
+              to={item.href}
               title={item.text}
               icon={item.icon ? <item.icon /> : <MdMusicNote />}
             />

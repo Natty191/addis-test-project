@@ -6,7 +6,7 @@ const AlbumCard = ({ album }: { album: PopularAlbum }) => {
     <Card
       title={album.album}
       subTitle={album.artist}
-      imageUrl={album.coverUrls?.[0] ?? ""}
+      imageUrl={album.coverUrls?.[1] ?? ""}
       defaultImageUrl="/album.jpg"
       subTitleLink={album.artist}
     ></Card>

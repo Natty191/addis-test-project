@@ -5,9 +5,11 @@ import H1 from "./H1";
 import Input from "./Input";
 import Label from "./Label";
 import { useForm } from "react-hook-form";
-import { closeAuthModal, loginRequest } from "../redux/authSlice";
-import { useDispatch } from "react-redux";
+import { loginRequest } from "../redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 import FormError from "./FormError";
+import { RootState } from "../redux/store";
+import SpinnerMini from "./SpinnerMiini";
 
 type LoginFormInputs = {
   email: string;
@@ -21,6 +23,7 @@ const InputWrap = styled.div`
 
 const Login = () => {
   const dispatch = useDispatch();
+  const { loadingAuth } = useSelector((state: RootState) => state.auth);
 
   const {
     register,
@@ -30,7 +33,7 @@ const Login = () => {
 
   const onSubmit = (data: LoginFormInputs) => {
     dispatch(loginRequest(data));
-    dispatch(closeAuthModal());
+    // dispatch(closeAuthModal());
   };
 
   return (
@@ -75,7 +78,7 @@ const Login = () => {
           fontSize: "2rem",
         }}
       >
-        Login
+        {loadingAuth ? <SpinnerMini /> : "Login"}
       </Button>
     </form>
     // </div>
