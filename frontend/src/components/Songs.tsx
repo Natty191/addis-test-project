@@ -3,7 +3,18 @@ import styled from "@emotion/styled";
 import { useSongs } from "../hooks/useSongs";
 import SongCard from "./SongCard";
 import TitledSection from "./TitledSection";
-import { Song } from "song";
+import { RootState } from "../redux/store";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getPopularAlbumsRequest,
+  getPopularArtistsRequest,
+  getPopularGenresRequest,
+  getPopularSongsRequest,
+} from "../redux/songSlice";
+import ArtistCard from "./ArtistCard";
+import GenreCard from "./GenreCard";
+import AlbumCard from "./AlbumCard";
 
 const StyledSongs = styled.div`
   display: flex;
@@ -20,65 +31,62 @@ const SongsGrid = styled.div`
   overflow: hidden;
 `;
 
-const removeDuplicate = (array: Song[], property: string) => [
-  ...new Map(
-    array.map((item) => [item[property as keyof Song].toString(), item])
-  ).values(),
-];
-
 const Songs = () => {
-  const { songs, loading, error } = useSongs();
+  const {
+    popularSongs,
+    popularArtists,
+    popularAlbums,
+    popularGenres,
+    loadingPopularSongs,
+    loadingPopularArtists,
+    loadingPopularAlbums,
+    loadingPopularGenres,
+  } = useSelector((state: RootState) => state.songs);
+  const dispatch = useDispatch();
 
-  const artists = removeDuplicate(songs.all, "artist");
-  const genres = removeDuplicate(songs.all, "genre");
-  const albums = removeDuplicate(songs.all, "album");
+  useEffect(() => {
+    dispatch(getPopularSongsRequest({ limit: 10, page: 1 }));
+    dispatch(getPopularArtistsRequest({ limit: 10, page: 1 }));
+    dispatch(getPopularAlbumsRequest({ limit: 10, page: 1 }));
+    dispatch(getPopularGenresRequest({ limit: 10, page: 1 }));
+  }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  if (songs.all.length === 0) return <p>No songs Available</p>;
+  if (
+    loadingPopularArtists ||
+    loadingPopularSongs ||
+    loadingPopularAlbums ||
+    loadingPopularGenres
+  ) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <StyledSongs sx={{ color: "lightestgrey" }}>
-      <TitledSection title="Artists">
+      <TitledSection title="Popular Artists">
         <SongsGrid>
-          {artists.map((song) => (
-            <SongCard
-              title={song.artist}
-              type="circular"
-              key={song._id}
-              song={song}
-            />
+          {popularArtists.map((artist) => (
+            <ArtistCard artist={artist} />
           ))}
         </SongsGrid>
       </TitledSection>
-      <TitledSection title="Songs">
+      <TitledSection title="Popular Songs">
         <SongsGrid>
-          {songs.all.map((song) => (
-            <SongCard type="song" key={song._id} song={song} />
+          {popularSongs.map((song) => (
+            <SongCard key={song._id} song={song} />
           ))}
         </SongsGrid>
       </TitledSection>
-      <TitledSection title="Genres">
+      <TitledSection title="Popular Genres">
         <SongsGrid>
-          {albums.map((song) => (
-            <SongCard
-              type="artist"
-              title={song.genre}
-              subTitle="Genre"
-              key={song._id}
-              song={song}
-            />
+          {popularGenres.map((genre) => (
+            <GenreCard key={genre.genre} genre={genre} />
           ))}
         </SongsGrid>
       </TitledSection>
-      <TitledSection title="Albums">
+      <TitledSection title="Popular Albums">
         <SongsGrid>
-          {albums.map((song) => (
-            <SongCard
-              type="album"
-              title={song.album}
-              key={song._id}
-              song={song}
-            />
+          {popularAlbums.map((album) => (
+            <AlbumCard key={album.album} album={album} />
           ))}
         </SongsGrid>
       </TitledSection>

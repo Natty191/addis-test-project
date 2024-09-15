@@ -18,7 +18,7 @@ const SongsFoundList = ({
   ...rest
 }: {
   songs: Song[];
-  sx: ThemeUIStyleObject<any>;
+  sx?: ThemeUIStyleObject<any>;
 }) => {
   return (
     <StyledSongsFoundList {...rest}>

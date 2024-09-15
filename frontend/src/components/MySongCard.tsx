@@ -4,6 +4,7 @@ import { Song } from "song";
 import CardLink from "./CardLink";
 import DeleteButton from "./DeleteButton";
 import React from "react";
+import EditButton from "./EditButton";
 
 const SongCard = styled.div`
   border-radius: 5px;
@@ -12,6 +13,8 @@ const SongCard = styled.div`
   gap: 1rem;
   padding: 1rem;
   cursor: pointer;
+  position: relative;
+  font-size: 1.5rem;
 
   :hover button {
     visibility: visible;
@@ -35,7 +38,7 @@ const Image = styled.img`
   border-radius: 2px;
 `;
 
-const SongsListCard = ({
+const MySongCard = ({
   song,
   ...rest
 }: { song: Song } & React.HTMLAttributes<HTMLDivElement>) => {
@@ -43,9 +46,9 @@ const SongsListCard = ({
     <SongCard
       {...rest}
       sx={{
-        background: "darkgrey",
+        background: "grey",
         ":hover": {
-          background: "grey",
+          background: "lightgrey",
         },
       }}
     >
@@ -67,9 +70,20 @@ const SongsListCard = ({
           {song.artist}
         </CardLink>
       </Links>
-      <DeleteButton songId={song._id} />
+      <div
+        sx={{
+          //   position: "absolute",
+          marginLeft: "auto",
+          display: "flex",
+          gap: "1rem",
+          right: "2rem",
+        }}
+      >
+        <EditButton song={song} />
+        <DeleteButton songId={song._id} />
+      </div>
     </SongCard>
   );
 };
 
-export default SongsListCard;
+export default MySongCard;

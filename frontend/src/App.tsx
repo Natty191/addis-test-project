@@ -6,12 +6,11 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "react-modal";
 import AppLayout from "./layouts/AppLayout";
-import AddSongPage from "./pages/AddSongPage";
 import SearchPage from "./pages/SearchPage";
 import HomePage from "./pages/HomePage";
-import SignupPage from "./pages/SignupPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthModal from "./components/AuthModal";
+import MySongsPage from "./pages/MySongsPage";
 
 Modal.setAppElement("#root");
 
@@ -29,12 +28,15 @@ function App() {
           ),
         },
         {
-          path: "add-song",
-          element: <AddSongPage />,
+          path: "my-songs",
+          element: (
+            <ProtectedRoute>
+              <MySongsPage />
+            </ProtectedRoute>
+          ),
         },
         { path: "search", element: <SearchPage /> },
         { path: "search/:filter", element: <SearchPage /> },
-        { path: "signup", element: <SignupPage /> },
       ],
     },
   ]);

@@ -4,6 +4,11 @@ import { css } from "@emotion/react";
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import { useColorMode } from "theme-ui";
 
+type ButtonProps = {
+  size?: keyof typeof sizes;
+  variation?: keyof typeof variations;
+};
+
 const sizes = {
   small: css`
     font-size: 1.4rem;
@@ -60,11 +65,6 @@ const variations = {
       background-color: #991b1b;
     }
   `,
-};
-
-type ButtonProps = {
-  size?: keyof typeof sizes;
-  variation?: keyof typeof variations;
 };
 
 const StyledButton = styled.button<ButtonProps>`

@@ -3,6 +3,11 @@ import styled from "@emotion/styled";
 import React, { useState } from "react";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
 
+type NavListProps = {
+  title: string;
+  children: React.ReactNode;
+};
+
 const StyledNavList = styled.div`
   display: flex;
   flex-flow: column wrap;
@@ -20,8 +25,10 @@ const NavHeader = styled.div`
   font-size: 0.9em;
   letter-spacing: 0.15rem;
   cursor: pointer;
-
   padding: 0.5rem 0;
+  svg {
+    color: #16c453;
+  }
 `;
 
 const StyledListItem = styled.a`
@@ -64,11 +71,6 @@ const ListItem = ({
 
 const CollapseList = ({ children }: { children: React.ReactNode }) => {
   return <div id="main">{children}</div>;
-};
-
-type NavListProps = {
-  title: string;
-  children: React.ReactNode;
 };
 
 const NavList = ({ title, children }: NavListProps) => {

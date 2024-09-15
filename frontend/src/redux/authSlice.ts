@@ -4,6 +4,7 @@ export type User = {
   _id: string;
   email: string;
   name: string;
+  favoriteSongs: string[];
 };
 
 export type AuthState = {
@@ -77,6 +78,26 @@ const authSlice = createSlice({
     getUserRequest(state) {
       state.loading = true;
     },
+    addFavoriteSongRequest(state, action: PayloadAction<string>) {
+      // state.loading = true;
+      state.user?.favoriteSongs.push(action.payload);
+    },
+    removeFavoriteSongRequest(state, action: PayloadAction<string>) {
+      // state.loading = true;
+      if (state.user) {
+        state.user.favoriteSongs = state.user.favoriteSongs.filter(
+          (songId) => songId !== action.payload
+        );
+      }
+    },
+    addRemoveFavoriteSongSuccess(state, action: PayloadAction<User>) {
+      // state.loading = false;
+      state.user = action.payload;
+    },
+    addRemoveFavoriteSongFailure(state, action: PayloadAction<string>) {
+      // state.loading = false;
+      state.error = action.payload;
+    },
     getUserSuccess(state, action: PayloadAction<User>) {
       state.loading = false;
       state.user = action.payload;
@@ -125,6 +146,10 @@ export const {
   getUserRequest,
   getUserSuccess,
   getUserFailure,
+  addFavoriteSongRequest,
+  removeFavoriteSongRequest,
+  addRemoveFavoriteSongSuccess,
+  addRemoveFavoriteSongFailure,
   logoutRequest,
   logoutSuccess,
   logoutFailure,

@@ -21,10 +21,18 @@ const songSchema = new mongoose.Schema(
     },
     genre: {
       type: String,
-      required: [true, "A song must have a genre"],
+      default: "Other",
       trim: true,
     },
-    coverUrl: String,
+    coverUrls: { type: [String] },
+    artistImage: String,
+    previewAudioUrl: { type: String },
+    likes: { type: Number, default: 0 },
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "A song must have a creator"],
+    },
   },
   { timestamps: true }
 );

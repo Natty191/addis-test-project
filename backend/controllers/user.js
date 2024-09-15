@@ -29,7 +29,7 @@ const signup = asyncHandler(async (req, res) => {
     password: hashedPassword,
   });
 
-  await newUser.save();
+  const user = await newUser.save();
 
   const token = generateToken(newUser._id);
 
@@ -39,7 +39,11 @@ const signup = asyncHandler(async (req, res) => {
     secure: process.env.NODE_ENV === "production" ? true : false,
   });
 
-  return res.status(201).json({ message: "User created successfully", token });
+  delete user.password;
+
+  return res
+    .status(201)
+    .json({ message: "User created successfully", token, user });
 });
 
 // User Login
@@ -74,7 +78,9 @@ const login = asyncHandler(async (req, res) => {
     secure: process.env.NODE_ENV === "production" ? true : false,
   });
 
-  return res.status(200).json({ message: "Login successful", token });
+  delete user.password;
+
+  return res.status(200).json({ message: "Login successful", token, user });
 });
 
 // User Logout
@@ -85,7 +91,32 @@ const logout = asyncHandler(async (req, res) => {
 
 const getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).select("-password");
-  return res.status(200).json(user);
+  return res.status(200).json({ user });
 });
 
-module.exports = { signup, login, logout, getUserProfile };
+const addFavorite = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  user.favoriteSongs.push(req.params.songId);
+  const updatedUser = await user.save();
+  return res.status(200).json({ message: "Favorite added", user: updatedUser });
+});
+
+const removeFavorite = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  user.favoriteSongs = user.favoriteSongs.filter(
+    (favorite) => favorite.toString() !== req.params.songId
+  );
+  const updatedUser = await user.save();
+  return res
+    .status(200)
+    .json({ message: "Favorite removed", user: updatedUser });
+});
+
+module.exports = {
+  signup,
+  login,
+  logout,
+  getUserProfile,
+  addFavorite,
+  removeFavorite,
+};

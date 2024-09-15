@@ -13,7 +13,7 @@ const StyledLabel = styled.label`
   /* left: 13px; */
   font-size: 2.1em;
   &.active {
-    transform: translateY(2.7em);
+    transform: translateY(2.4em);
     left: 2px;
     font-size: 1.5em;
   }

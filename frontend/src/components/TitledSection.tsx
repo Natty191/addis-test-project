@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 const StyledTitledSection = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 2rem;
 
   > h3 {
     /* font-size: 2.3rem; */

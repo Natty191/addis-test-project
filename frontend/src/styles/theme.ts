@@ -11,11 +11,12 @@ const theme: Theme = {
     lightgrey: "rgb(37,37,37)",
     lightergrey: "rgb(130,130,130)",
     lightestgrey: "rgb(200,200,200)",
-    primary: "#1ed760",
+    primary: "#16c453",
     secondary: "#9cf",
     accent: "#f3c",
     muted: "#111",
     red: "#ff0000",
+    lightred: "#ff6565",
     darkred: "rgb(61, 0, 0)",
     modes: {
       light: {
@@ -26,6 +27,7 @@ const theme: Theme = {
         lightgrey: "rgb(218,218,218)",
         lightergrey: "rgb(70,70,70)",
         lightestgrey: "rgb(35,35,35)",
+        primary: "#1ed760",
         red: "#ff0000",
         darkred: "rgb(255, 178, 178)",
         // primary: "#33e",

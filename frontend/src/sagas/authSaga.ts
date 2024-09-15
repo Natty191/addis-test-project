@@ -1,5 +1,12 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { getUser, loginUser, logout, registerUser } from "../utils/api";
+import {
+  addFavoriteSongAPI,
+  getUser,
+  loginUser,
+  logout,
+  registerUser,
+  removeFavoriteSongAPI,
+} from "../utils/api";
 import {
   loginRequest,
   loginSuccess,
@@ -12,7 +19,13 @@ import {
   getUserFailure,
   logoutRequest,
   logoutSuccess,
-} from "./authSlice";
+  addRemoveFavoriteSongSuccess,
+  addRemoveFavoriteSongFailure,
+  addFavoriteSongRequest,
+  removeFavoriteSongRequest,
+} from "../redux/authSlice";
+import songSaga from "./songSaga";
+import { PayloadAction } from "@reduxjs/toolkit";
 
 function* handleLogin(
   action: ReturnType<typeof loginRequest>
@@ -30,7 +43,7 @@ function* handleSignUp(
 ): Generator<any, void, any> {
   try {
     const response = yield call(registerUser, action.payload);
-    yield put(signUpSuccess({ user: response.data }));
+    yield put(signUpSuccess({ user: response.data.user }));
   } catch (error: any) {
     yield put(signUpFailure({ error: error.message }));
   }
@@ -39,9 +52,33 @@ function* handleSignUp(
 function* handleGetUser(): Generator<any, void, any> {
   try {
     const response = yield call(getUser);
-    yield put(getUserSuccess(response.data));
+    yield put(getUserSuccess(response.data.user));
   } catch (error: any) {
     yield put(getUserFailure(error.message));
+  }
+}
+
+function* addFavoriteSaga(
+  action: PayloadAction<string>
+): Generator<any, void, any> {
+  try {
+    const response = yield call(addFavoriteSongAPI, action.payload);
+    put(addRemoveFavoriteSongSuccess(response.data.user));
+  } catch (error: any) {
+    put(addRemoveFavoriteSongFailure(error.message));
+    // Handle error
+  }
+}
+
+function* removeFavoriteSaga(
+  action: PayloadAction<string>
+): Generator<any, void, any> {
+  try {
+    const response = yield call(removeFavoriteSongAPI, action.payload);
+    put(addRemoveFavoriteSongSuccess(response.data.user));
+  } catch (error: any) {
+    put(addRemoveFavoriteSongFailure(error.message));
+    // Handle error
   }
 }
 
@@ -58,6 +95,8 @@ function* authSaga() {
   yield takeLatest(loginRequest.type, handleLogin);
   yield takeLatest(signUpRequest.type, handleSignUp);
   yield takeLatest(getUserRequest.type, handleGetUser);
+  yield takeLatest(addFavoriteSongRequest.type, addFavoriteSaga);
+  yield takeLatest(removeFavoriteSongRequest.type, removeFavoriteSaga);
   yield takeLatest(logoutRequest.type, handleLogout);
 }
 

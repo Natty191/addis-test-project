@@ -4,30 +4,193 @@ const axios = require("axios");
 const Song = require("../models/song");
 const { removeDuplicates } = require("../utils/removeDuplicates");
 const { getAccessToken } = require("../utils/getSpotifyAccessToke");
+const { validationResult } = require("express-validator");
 
 // Create a new song
 const createSong = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     res.status(400);
-    throw new Error("Validation failed");
+    throw new Error(errors.array()[0].msg);
   }
 
-  const { title, artist, album, genre } = req.body;
+  const { title, artist, album, genre, coverUrls, artistId, preview_url } =
+    req.body;
 
   const newSong = new Song({
     title,
     artist,
     album,
-    genre,
+    genre: genre ? undefined : genre,
+    coverUrls,
+    artistImage: coverUrls[0],
+    previewAudioUrl: preview_url ?? "",
+    creator: req.user._id,
   });
+
+  if (artistId) {
+    const token = await getAccessToken();
+
+    const url = `https://api.spotify.com/v1/artists/${artistId}`;
+
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (newSong.genre === "") {
+      newSong.genre = response.data.genres[0];
+    }
+    newSong.artistImage = response.data.images[0].url;
+  }
 
   await newSong.save();
   res.status(201).json({ message: "Song created successfully", song: newSong });
 });
 
-// Get all songs
+// get all songs
 const getSongs = asyncHandler(async (req, res) => {
+  const { limit = 10, page = 1 } = req.query;
+  const songs = await Song.find()
+    .limit(limit)
+    .skip(page * limit);
+
+  res.status(200).json({ songs });
+});
+
+// get my songs
+const getMySongs = asyncHandler(async (req, res) => {
+  const songs = await Song.find({ creator: req.user._id.toString() });
+
+  res.status(200).json({ songs });
+});
+
+// popular Songs
+const getPopularSongs = asyncHandler(async (req, res) => {
+  const popularSongs = await Song.find().sort({ likes: -1 }).limit(10);
+
+  res.json({ popularSongs });
+});
+
+// include total likes, one of artistImage
+const getPopularArtists = asyncHandler(async (req, res) => {
+  const popularArtists = await Song.aggregate([
+    {
+      $group: {
+        _id: "$artist",
+        songsCount: { $sum: 1 },
+        totalLikes: { $sum: "$likes" },
+        artistImage: { $first: "$artistImage" }, // get the first artistImage
+      },
+    },
+    {
+      $project: {
+        artist: "$_id",
+        songsCount: 1,
+        totalLikes: 1,
+        averageLikes: { $divide: ["$totalLikes", "$songsCount"] },
+        artistImage: 1,
+        _id: 0,
+      },
+    },
+    {
+      $sort: { averageLikes: -1, songsCount: -1 },
+    },
+    { $limit: 10 },
+  ]);
+
+  res.json({ popularArtists });
+});
+
+// popular Albums
+const getPopularAlbums = asyncHandler(async (req, res) => {
+  const popularAlbums = await Song.aggregate([
+    {
+      $group: {
+        _id: "$album",
+        tracksCount: { $sum: 1 },
+        totalLikes: { $sum: "$likes" },
+        coverUrls: { $first: "$coverUrls" },
+        artist: { $first: "$artist" },
+      },
+    },
+    {
+      $project: {
+        album: "$_id",
+        tracksCount: 1,
+        totalLikes: 1,
+        averageLikes: { $divide: ["$totalLikes", "$tracksCount"] },
+        coverUrls: 1,
+        artist: 1,
+        _id: 0,
+      },
+    },
+    {
+      $sort: { averageLikes: -1, tracksCount: -1 },
+    },
+    { $limit: 10 },
+  ]);
+
+  res.json({ popularAlbums });
+});
+
+// popular Genres
+const getPopularGenres = asyncHandler(async (req, res) => {
+  const popularGenres = await Song.aggregate([
+    {
+      $group: {
+        _id: "$genre",
+        count: { $sum: 1 },
+        totalLikes: { $sum: "$likes" },
+        // get artistImage of the  song with the most likes
+        topSong: {
+          $push: {
+            artistImage: "$artistImage",
+            likes: "$likes",
+          },
+        },
+      },
+    },
+
+    {
+      // Sort the songs by likes in descending order
+      $addFields: {
+        topSong: {
+          $arrayElemAt: [
+            {
+              $filter: {
+                input: "$topSong",
+                cond: { $eq: ["$$this.likes", { $max: "$topSong.likes" }] },
+              },
+            },
+            0,
+          ],
+        },
+      },
+    },
+
+    {
+      $project: {
+        genre: "$_id",
+        count: 1,
+        totalLikes: 1,
+        averageLikes: { $divide: ["$totalLikes", "$count"] },
+        "topSong.artistImage": 1,
+        _id: 0,
+      },
+    },
+    {
+      $sort: { averageLikes: -1, count: -1 },
+    },
+    { $limit: 10 },
+  ]);
+
+  res.json({ popularGenres });
+});
+
+//  Search songs
+const searchSongs = asyncHandler(async (req, res) => {
   try {
     const { query, filter, sort } = req.query;
 
@@ -150,8 +313,6 @@ const searchSongToAdd = asyncHandler(async (req, res) => {
     limit: 4,
   });
 
-  console.log(query);
-
   const url = `https://api.spotify.com/v1/search?${query}`;
 
   const response = await axios.get(url, {
@@ -180,6 +341,7 @@ const searchSongToAdd = asyncHandler(async (req, res) => {
     genre: "",
     coverUrls: item.album.images.map((image) => image.url),
     artistId: item.artists[0].id,
+    previewAudioUrl: item.preview_url,
   }));
 
   // res.json(response.data.tracks.items);
@@ -204,7 +366,7 @@ const updateSong = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { title, artist, album, genre } = req.body;
 
-  const song = await Song.findById(id);
+  const song = await Song.find({ _id: id, creator: req.user._id });
   if (!song) {
     res.status(404);
     throw new Error("Song not found");
@@ -222,7 +384,8 @@ const updateSong = asyncHandler(async (req, res) => {
 // Delete a song by ID
 const deleteSong = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const song = await Song.findByIdAndDelete(id);
+
+  const song = await Song.findOneAndDelete({ _id: id, creator: req.user._id });
 
   if (!song) {
     res.status(404);
@@ -281,6 +444,12 @@ const getSongStatistics = asyncHandler(async (req, res) => {
 module.exports = {
   createSong,
   getSongs,
+  searchSongs,
+  getMySongs,
+  getPopularSongs,
+  getPopularArtists,
+  getPopularAlbums,
+  getPopularGenres,
   searchSongToAdd,
   getSongById,
   updateSong,

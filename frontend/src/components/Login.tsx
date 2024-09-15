@@ -75,7 +75,7 @@ const Login = () => {
           fontSize: "2rem",
         }}
       >
-        Sign Up
+        Login
       </Button>
     </form>
     // </div>

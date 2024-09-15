@@ -4,10 +4,9 @@ import ConfirmDelete from "./ConfirmDelete";
 import { deleteSongRequest } from "../redux/songSlice";
 import { useDispatch } from "react-redux";
 import { HiTrash } from "react-icons/hi2";
-import { Song } from "song";
 import CenteredModal from "./CenteredModal";
 
-const DeleteButton = ({ song }: { song: Song }) => {
+const DeleteButton = ({ songId }: { songId: string }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -21,19 +20,17 @@ const DeleteButton = ({ song }: { song: Song }) => {
       <button
         onClick={() => setIsModalOpen(true)}
         sx={{
-          padding: "0 1rem",
-          float: "right",
-          marginLeft: "auto",
-          visibility: "hidden",
-          zIndex: 100,
+          // position: "absolute",
+          // zIndex: 10,
+          // right: ".1rem",
+          width: "2rem",
+          height: "2rem",
           fontSize: 4,
           color: "red",
-          borderRadius: "full",
-          background: "grey",
           overflow: "hidden",
-          // padding: "2rem",
+
           ":hover": {
-            svg: { color: "orange" },
+            svg: { color: "lightred" },
           },
           svg: {
             color: "lightergrey",
@@ -45,7 +42,7 @@ const DeleteButton = ({ song }: { song: Song }) => {
       <CenteredModal isOpen={isModalOpen}>
         <ConfirmDelete
           resourceName="Song"
-          onConfirm={() => handleConfirmDelete(song._id)}
+          onConfirm={() => handleConfirmDelete(songId)}
           onCloseModal={() => setIsModalOpen(false)}
           disabled={false}
         />

@@ -4,145 +4,179 @@ import Button from "./Button";
 import H1 from "./H1";
 import Input from "./Input";
 import Label from "./Label";
-import { useForm } from "react-hook-form";
-import { closeAuthModal } from "../redux/authSlice";
+import SongsListCard from "./SongsListICard";
 import { useDispatch, useSelector } from "react-redux";
-import FormError from "./FormError";
-import { Song } from "song";
-import { addSongStart, searchSongToCreateRequst } from "../redux/songSlice";
-import SongsFoundList from "./SongsFoundList";
+import {
+  addSongStart,
+  NewSong,
+  searchSongToCreateRequst,
+  updateSongRequest,
+} from "../redux/songSlice";
 import { RootState } from "../redux/store";
 import { useDeferredValue, useEffect, useState } from "react";
+import { useOutsideClick } from "../hooks/useOutsideClick";
+import { toast } from "react-toastify";
+import { openAuthModal } from "../redux/authSlice";
+import { Song } from "song";
+import SpinnerMini from "./SpinnerMiini";
+
+const StyledForm = styled.form`
+  margin: 3rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3em;
+  font-size: 1rem;
+  position: relative;
+  width: 100%;
+`;
 
 const InputWrap = styled.div`
   position: relative;
 `;
 
-const AddSongForm = () => {
+const AutoComplete = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  translate: -20%;
+  width: 19rem;
+  overflow: hidden;
+  :hover * {
+    text-decoration: none !important;
+  }
+`;
+
+const AddSongForm = ({ editSong }: { editSong?: Song | null }) => {
+  const [distanceTop, setDistanceTop] = useState(0);
+  const [showAutocomplete, setShowAutocomplete] = useState(false);
   const dispatch = useDispatch();
-  const { songsFound } = useSelector((state: RootState) => state.songs);
-  const {
-    register,
-    handleSubmit,
-    watch,
-    getValues,
-    formState: { errors },
-  } = useForm<Song>();
-  const [formData, setFormData] = useState({
-    title: "",
-    artist: "",
-    album: "",
-    genre: "",
+  const { songsFound, loadingAddSong } = useSelector(
+    (state: RootState) => state.songs
+  );
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const ref = useOutsideClick(() => {
+    setShowAutocomplete(false);
+  });
+
+  const [formData, setFormData] = useState<NewSong>({
+    title: editSong?.title ?? "",
+    artist: editSong?.artist ?? "",
+    album: editSong?.album ?? "",
+    genre: editSong?.genre ?? "",
+    coverUrls: editSong?.coverUrls ?? [],
+    artistId: "",
+    previewAudioUrl: "",
   });
 
   const deferredFormData = useDeferredValue(formData);
 
-  const { title, artist, album, genre } = watch();
-
   function handleFormChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFormData((formData) => ({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]:
+        e.target.name !== "coverUrls"
+          ? e.target.value
+          : [e.target.value, e.target.value, e.target.value],
     }));
-    // dispatch(searchSongToCreateRequst(formData));
   }
 
-  function onSubmit() {
-    // dispatch(addSongStart(data));
-    dispatch(closeAuthModal());
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!isAuthenticated) {
+      toast.info("You need to be logged in to add a song");
+      dispatch(openAuthModal());
+    } else {
+      if (editSong?._id) {
+        dispatch(updateSongRequest({ song: formData, id: editSong._id }));
+      } else {
+        dispatch(addSongStart(formData));
+      }
+    }
+  }
+
+  function onInputFocus(e: React.FocusEvent<HTMLFormElement, Element>) {
+    if (
+      e.target.name !== "title" &&
+      e.target.name !== "album" &&
+      e.target.name !== "artist" &&
+      e.target.name !== "genre"
+    )
+      return;
+    setShowAutocomplete(true);
+    setDistanceTop(e.target.getBoundingClientRect().top);
   }
 
   useEffect(() => {
-    // const song = getValues();
-
+    if (
+      formData.title === "" &&
+      formData.artist === "" &&
+      formData.album === "" &&
+      formData.coverUrls[0] === ""
+    )
+      return;
     dispatch(searchSongToCreateRequst(deferredFormData));
   }, [deferredFormData, dispatch]);
 
   return (
-    <form
-      sx={{
-        width: "35rem",
-        margin: "3rem auto",
-        display: "flex",
-        flexDirection: "column",
-        gap: "3em",
-        fontSize: "1rem",
-        // height: "40rem",
-      }}
-      onSubmit={onSubmit}
-    >
-      <H1>Create Song</H1>
+    <StyledForm onSubmit={onSubmit} onInput={onInputFocus}>
+      <H1>{editSong ? "Edit " : "Create "} Song</H1>
       <InputWrap>
-        {errors.title && <FormError>{errors.title.message}</FormError>}
         <Label>Title</Label>
         <Input
           name="title"
           value={formData.title}
           onChange={handleFormChange}
-          // register={register("title", { required: "Title is required" })}
-          // type="title"
-          // onChange={() =>
-          //   dispatch(searchSongToCreateRequst({ title, artist, album, genre }))
-          // }
+          required
         />
       </InputWrap>
 
       <InputWrap>
-        {errors.artist && <FormError>{errors.artist.message}</FormError>}
         <Label>Artist</Label>
         <Input
           name="artist"
           value={formData.artist}
           onChange={handleFormChange}
           required
-          // register={register("artist", {
-          //   required: "Artist is required",
-          // })}
-          // type="artist"
-        />
-        <SongsFoundList
-          sx={{
-            position: "absolute",
-            zIndex: 10,
-            right: 0,
-            "> div": { bg: "lightgrey" },
-          }}
-          songs={songsFound}
         />
       </InputWrap>
 
       <InputWrap>
-        {errors.album && <FormError>{errors.album.message}</FormError>}
         <Label>Album</Label>
         <Input
           name="album"
           value={formData.album}
           onChange={handleFormChange}
           required
-          // register={register("album", {
-          //   required: "Album is required",
-          // })}
-          // type="album"
         />
       </InputWrap>
 
       <InputWrap>
-        {errors.genre && <FormError>{errors.genre.message}</FormError>}
         <Label>Genre</Label>
         <Input
+          name="genre"
           value={formData.genre}
           onChange={handleFormChange}
-          required
-          // register={register("genre", {
-          //   required: "Genre is required",
-          // })}
-          // type="genre"
         />
+      </InputWrap>
+
+      <InputWrap>
+        <Label>Cover Image URL</Label>
+        <Input
+          name="coverUrls"
+          value={formData.coverUrls[0]}
+          onChange={handleFormChange}
+          required
+        />
+        <img src={formData.coverUrls[0]} alt="" />
       </InputWrap>
 
       <Button
         type="submit"
         size="large"
+        disabled={loadingAddSong}
         sx={{
           width: "100%",
           marginTop: "2.5rem",
@@ -150,9 +184,31 @@ const AddSongForm = () => {
           fontSize: "2rem",
         }}
       >
-        Sign Up
+        {loadingAddSong ? <SpinnerMini /> : `${editSong ? "Edit" : "Add"} Song`}
       </Button>
-    </form>
+
+      {showAutocomplete && (
+        <AutoComplete
+          ref={ref}
+          sx={{
+            top: distanceTop - 34,
+            "> div": { bg: "lightgrey" },
+          }}
+        >
+          {songsFound.map((song) => (
+            <SongsListCard
+              key={song.artistId}
+              onClick={() => {
+                setShowAutocomplete(false);
+                setFormData(song);
+                // dispatch(reset());
+              }}
+              song={song as unknown as Song}
+            />
+          ))}
+        </AutoComplete>
+      )}
+    </StyledForm>
   );
 };
 

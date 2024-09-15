@@ -4,6 +4,7 @@ import { NavObject } from "../data/navigations";
 import { MdMusicNote } from "react-icons/md";
 
 const StyledSidebarNavigation = styled.div`
+  margin-bottom: 2rem;
   padding: 3rem 2.4rem;
 
   overflow-y: scroll;

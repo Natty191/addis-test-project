@@ -24,6 +24,7 @@ const CenteredModal = (props: Props) => {
         },
         overlay: {
           backdropFilter: "blur(5px)",
+          zIndex: 10,
           background:
             colorMode === "light" ? "rgba(55,55,55,0.5)" : "rgba(0, 0, 0, 0.4)",
         },

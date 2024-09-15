@@ -5,8 +5,8 @@ import { useSearch } from "../hooks/useSearch";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const StyledSearch = styled.div`
+  max-width: 30rem;
   margin: 0 2rem;
-  max-width: 20rem;
   font-size: 1.6rem;
 
   svg {
@@ -18,6 +18,7 @@ const StyledSearch = styled.div`
 `;
 
 const Input = styled.input`
+  width: 100%;
   border-radius: 1.5rem;
   border: none;
   padding: 0.3rem 3rem;
@@ -33,7 +34,7 @@ const Search = () => {
   const location = useLocation();
 
   return (
-    <StyledSearch>
+    <StyledSearch sx={{ width: ["15rem", "20rem"] }}>
       <HiOutlineSearch />
       <Input
         type="text"

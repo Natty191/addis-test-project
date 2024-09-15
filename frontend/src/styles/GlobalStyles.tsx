@@ -82,6 +82,9 @@ const GlobalStyles = () => (
           rgba(160, 160, 160, 0.2)
         );
       }
+      input:-webkit-autofill {
+        background-color: rgba(180, 180, 180, 0.3);
+      }
     `}
   />
 );

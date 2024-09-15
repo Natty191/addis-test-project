@@ -3,11 +3,11 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import styled from "@emotion/styled";
-import { useState } from "react";
-import Modal from "react-modal";
-import LoginPage from "../components/AuthModal";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getUserRequest } from "../redux/authSlice";
+import AddSongModal from "../components/AddSongModal";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 const StyledAppLayout = styled.div`
   display: grid;
@@ -18,6 +18,7 @@ const StyledAppLayout = styled.div`
 const Main = styled.main`
   border-radius: 4px;
   overflow-y: scroll;
+  position: relative;
 `;
 
 const Container = styled.div`
@@ -31,61 +32,41 @@ const Container = styled.div`
 
 const AppLayout = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const { isAuthModalOpen } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUserRequest());
+  }, []);
 
   return (
-    <StyledAppLayout
-      sx={{
-        gridTemplateColumns: [
-          "1fr",
-          isDrawerOpen ? "24rem 1fr" : null,
-          "24rem 1fr",
-        ],
-      }}
-    >
-      <Header setIsDrawerOpen={setIsDrawerOpen} />
-      <Sidebar isDrawerOpen={isDrawerOpen} />
-      <Main
+    <>
+      <StyledAppLayout
         sx={{
-          background: "darkgrey",
-          paddingInline: [0, 4, 3],
-          paddingBlock: [0, 1, 3],
+          gridTemplateColumns: [
+            "1fr",
+            isDrawerOpen ? "24rem 1fr" : null,
+            "24rem 1fr",
+          ],
+        }}
+      >
+        <Header setIsDrawerOpen={setIsDrawerOpen} />
+        <Sidebar isDrawerOpen={isDrawerOpen} />
+        <Main
+          sx={{
+            background: "darkgrey",
+            paddingInline: [0, 4, 3],
+            paddingBlock: [0, 1, 3],
 
-          gridColumn: ["1 / -1", "initial"],
-        }}
-      >
-        <Container>
-          <Outlet />
-        </Container>
-      </Main>
-      <Modal
-        style={{
-          content: {
-            inset: "auto",
-            margin: "auto",
-            padding: "0",
-            border: "none",
-            background: "none",
-            overflow: "auto",
-            WebkitOverflowScrolling: "touch",
-            borderRadius: "0",
-            outline: "none",
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          },
-          overlay: {
-            backdropFilter: "blur(19px)",
-            background: "rgba(0, 0, 0, 0.5)",
-          },
-        }}
-        isOpen={isAuthModalOpen}
-      >
-        <LoginPage />
-      </Modal>
-    </StyledAppLayout>
+            gridColumn: ["1 / -1", "initial"],
+          }}
+        >
+          <Container>
+            <Outlet />
+          </Container>
+        </Main>
+      </StyledAppLayout>
+      <AddSongModal />
+    </>
   );
 };
 

@@ -50,7 +50,8 @@ const TopResultCard = ({ song }: { song: Song }) => {
       }}
     >
       <img
-        src={`/${!filter || filter === "genre" ? "artist" : filter}.jpg`}
+        // src={`/${!filter || filter === "genre" ? "artist" : filter}.jpg`}
+        src={song.coverUrls[0]}
         alt=""
         sx={{ width: "10rem", aspectRatio: 1, borderRadius: "default" }}
       />

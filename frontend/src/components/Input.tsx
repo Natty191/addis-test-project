@@ -5,15 +5,15 @@ import { UseFormRegister } from "react-hook-form";
 const Input: React.FC<
   React.InputHTMLAttributes<HTMLInputElement> & {
     register?: ReturnType<UseFormRegister<any>>;
-    onChange?: ChangeEventHandler<HTMLInputElement>;
+    onInput?: ChangeEventHandler<HTMLInputElement>;
   }
 > = ({
   register,
-  onChange,
+  onInput,
   ...props
 }: {
   register?: ReturnType<UseFormRegister<any>>;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onInput?: ChangeEventHandler<HTMLInputElement>;
 }) => {
   const onInputFill = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length > 0) {
@@ -29,13 +29,14 @@ const Input: React.FC<
 
   return (
     <input
+      autoComplete="off"
       {...register}
       {...props}
       sx={{
         fontSize: "2.1em",
         display: "block",
         width: "100%",
-        height: "100%",
+        // height: "100%",
         padding: "0.5rem 0rem",
         background: "none",
         backgroundImage: "none",
@@ -50,10 +51,11 @@ const Input: React.FC<
           borderColor: "primary",
         },
       }}
-      onChange={(e) => {
-        onInputFill(e);
-        if (onChange) {
-          onChange(e);
+      onFocus={(e) => onInputFill(e as React.ChangeEvent<HTMLInputElement>)}
+      onInput={(e) => {
+        onInputFill(e as React.ChangeEvent<HTMLInputElement>);
+        if (onInput) {
+          onInput(e as React.ChangeEvent<HTMLInputElement>);
         }
       }}
     />

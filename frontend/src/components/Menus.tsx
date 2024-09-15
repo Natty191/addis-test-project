@@ -5,6 +5,23 @@ import { HiChevronDown } from "react-icons/hi2";
 import styled from "@emotion/styled";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 
+type Position = {
+  x: number;
+  y: number;
+};
+
+type UserContextType = {
+  openId: string;
+  open: (id: string) => void;
+  close: () => void;
+  setPosition: React.Dispatch<React.SetStateAction<Position | null>>;
+  position: Position | null;
+};
+
+type ListProps = {
+  position: Position | null;
+};
+
 const Menu = styled.div`
   display: flex;
   align-items: center;
@@ -19,10 +36,6 @@ const StyledToggle = styled.button`
   transition: all 0.2s;
 `;
 
-type ListProps = {
-  position: Position | null;
-};
-
 const StyledList = styled.ul<ListProps>`
   position: fixed;
 
@@ -31,6 +44,7 @@ const StyledList = styled.ul<ListProps>`
 
   right: ${(props) => props.position?.x}px;
   top: ${(props) => props.position?.y}px;
+  z-index: 100;
 `;
 
 const StyledButton = styled.button`
@@ -52,19 +66,6 @@ const StyledButton = styled.button`
   align-items: center;
   gap: 1.6rem;
 `;
-
-type Position = {
-  x: number;
-  y: number;
-};
-
-type UserContextType = {
-  openId: string;
-  open: (id: string) => void;
-  close: () => void;
-  setPosition: React.Dispatch<React.SetStateAction<Position | null>>;
-  position: Position | null;
-};
 
 const MenusContext = createContext<UserContextType | null>(null);
 

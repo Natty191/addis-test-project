@@ -1,25 +1,77 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Song } from "song";
 
-type NewSong = {
+export type NewSong = {
   title: string;
   artist: string;
   album: string;
   genre: string;
+  coverUrls: string[];
+  artistId: string;
+  previewAudioUrl: string;
+};
+
+export type PopularArtist = {
+  count: number;
+  totalLikes: number;
+  artist: string;
+  averageLikes: number;
+  artistImage: string;
+};
+
+export type PopularAlbum = {
+  count: number;
+  totalLikes: number;
+  album: string;
+  averageLikes: number;
+  artist: string;
+  coverUrls: string[];
+};
+
+export type PopularGenre = {
+  count: number;
+  totalLikes: number;
+  genre: string;
+  averageLikes: number;
+  topSong: { artistImage: string };
 };
 
 type SongState = {
   songs: { filtered: Song[]; all: Song[] };
-  songsFound: Song[];
+  songsFound: NewSong[];
+  mySongs: Song[];
+  popularSongs: Song[];
+  loadingPopularSongs: boolean;
+  popularArtists: PopularArtist[];
+  loadingPopularArtists: boolean;
+  popularAlbums: PopularAlbum[];
+  loadingPopularAlbums: boolean;
+  popularGenres: PopularGenre[];
+  loadingPopularGenres: boolean;
   loading: boolean;
+  loadingAddSong: boolean;
   error: string | null;
+  isAddModalOpen: boolean;
+  editSong: Song | null;
 };
 
 const initialState: SongState = {
   songs: { filtered: [], all: [] },
   songsFound: [],
+  mySongs: [],
+  popularSongs: [],
+  loadingPopularSongs: false,
+  popularArtists: [],
+  loadingPopularArtists: false,
+  popularAlbums: [],
+  loadingPopularAlbums: false,
+  popularGenres: [],
+  loadingPopularGenres: false,
   loading: true,
+  loadingAddSong: false,
   error: null,
+  isAddModalOpen: false,
+  editSong: null,
 };
 
 // Create the slice
@@ -50,37 +102,133 @@ const songSlice = createSlice({
       state.error = action.payload;
     },
     searchSongToCreateRequst(state, _action: PayloadAction<NewSong>) {
-      state.loading = true;
+      // state.loading = true;
       state.error = null;
     },
     searchSongToCreateSuccess(state, action: PayloadAction<any[]>) {
-      state.loading = false;
+      // state.loading = false;
       state.songsFound = action.payload;
     },
     searchSongToCreateFailure(state, action: PayloadAction<string>) {
-      state.loading = false;
+      // state.loading = false;
       state.error = action.payload;
     },
-    addSongStart(state, _action: PayloadAction<NewSong>) {
+    getMySongsRequest(state) {
       state.loading = true;
       state.error = null;
     },
-    addSongSuccess(state, action: PayloadAction<Song>) {
-      state.songs.all.push(action.payload);
+    getMySongsSuccess(state, action: PayloadAction<Song[]>) {
       state.loading = false;
+      state.mySongs = action.payload;
     },
-    addSongFailure(state, action: PayloadAction<string>) {
+    getMySongsFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
     },
-
-    updateSong(state, action: PayloadAction<Song>) {
-      const index = state.songs.all.findIndex(
+    openAddModal(state) {
+      state.isAddModalOpen = true;
+    },
+    closeAddModal(state) {
+      state.editSong = null;
+      state.isAddModalOpen = false;
+    },
+    addSongStart(state, _action: PayloadAction<NewSong>) {
+      state.loadingAddSong = true;
+      state.error = null;
+    },
+    addSongSuccess(state, action: PayloadAction<Song>) {
+      state.loadingAddSong = false;
+      state.songs.all.push(action.payload);
+      state.isAddModalOpen = false;
+    },
+    addSongFailure(state, action: PayloadAction<string>) {
+      state.loadingAddSong = false;
+      state.error = action.payload;
+    },
+    // with optional payload
+    getPopularSongsRequest(
+      state,
+      action: PayloadAction<{ limit?: number; page?: number } | undefined>
+    ) {
+      state.loadingPopularSongs = true;
+      state.error = null;
+    },
+    getPopularSongsSuccess(state, action: PayloadAction<Song[]>) {
+      state.loadingPopularSongs = false;
+      state.popularSongs = action.payload;
+    },
+    getPopularSongsFailure(state, action: PayloadAction<string>) {
+      state.loadingPopularSongs = false;
+      state.error = action.payload;
+    },
+    getPopularArtistsRequest(
+      state,
+      _action: PayloadAction<{ limit: number; page: number }>
+    ) {
+      state.loadingPopularArtists = true;
+      state.error = null;
+    },
+    getPopularArtistsSuccess(state, action: PayloadAction<PopularArtist[]>) {
+      state.loadingPopularArtists = false;
+      state.popularArtists = action.payload;
+    },
+    getPopularArtistsFailure(state, action: PayloadAction<string>) {
+      state.loadingPopularArtists = false;
+      state.error = action.payload;
+    },
+    getPopularAlbumsRequest(
+      state,
+      _action: PayloadAction<{ limit: number; page: number }>
+    ) {
+      state.loadingPopularAlbums = true;
+      state.error = null;
+    },
+    getPopularAlbumsSuccess(state, action: PayloadAction<PopularAlbum[]>) {
+      state.loadingPopularAlbums = false;
+      state.popularAlbums = action.payload;
+    },
+    getPopularAlbumsFailure(state, action: PayloadAction<string>) {
+      state.loadingPopularAlbums = false;
+      state.error = action.payload;
+    },
+    getPopularGenresRequest(
+      state,
+      _action: PayloadAction<{ limit: number; page: number }>
+    ) {
+      state.loadingPopularGenres = true;
+      state.error = null;
+    },
+    getPopularGenresSuccess(state, action: PayloadAction<PopularGenre[]>) {
+      state.loadingPopularGenres = false;
+      state.popularGenres = action.payload;
+    },
+    getPopularGenresFailure(state, action: PayloadAction<string>) {
+      state.loadingPopularGenres = false;
+      state.error = action.payload;
+    },
+    setEditSong(state, action: PayloadAction<Song | null>) {
+      state.editSong = action.payload;
+    },
+    updateSongRequest(
+      state,
+      action: PayloadAction<{ song: NewSong; id: string }>
+    ) {
+      state.loadingAddSong = true;
+      state.error = null;
+    },
+    updateSongSuccess(state, action: PayloadAction<Song>) {
+      state.loadingAddSong = false;
+      state.isAddModalOpen = false;
+      const index = state.mySongs.findIndex(
         (song: Song) => song._id === action.payload._id
       );
       if (index !== -1) {
-        state.songs.all[index] = action.payload;
+        state.mySongs[index] = action.payload;
       }
+    },
+    updateSongFailure(state, action: PayloadAction<string>) {
+      state.loadingAddSong = false;
+      state.error = action.payload;
     },
     deleteSongRequest(state, action: PayloadAction<string>) {
       // state.loading = true;
@@ -93,13 +241,18 @@ const songSlice = createSlice({
       state.songs.filtered = state.songs.filtered.filter(
         (song: Song) => song._id !== action.payload
       );
-
       // state.loading = false;
       state.error = null;
     },
     deleteSongFailure(state, action: PayloadAction<string>) {
       // state.loading = false;
       state.error = action.payload;
+    },
+    reset(state) {
+      state.loading = false;
+      state.error = initialState.error;
+      state.songs = initialState.songs;
+      state.songsFound = initialState.songsFound;
     },
   },
 });
@@ -112,13 +265,34 @@ export const {
   searchSongToCreateRequst,
   searchSongToCreateSuccess,
   searchSongToCreateFailure,
+  getMySongsRequest,
+  getMySongsSuccess,
+  getMySongsFailure,
+  getPopularSongsRequest,
+  getPopularSongsSuccess,
+  getPopularSongsFailure,
+  getPopularArtistsRequest,
+  getPopularArtistsSuccess,
+  getPopularArtistsFailure,
+  getPopularAlbumsRequest,
+  getPopularAlbumsSuccess,
+  getPopularAlbumsFailure,
+  getPopularGenresRequest,
+  getPopularGenresSuccess,
+  getPopularGenresFailure,
+  openAddModal,
+  closeAddModal,
   addSongStart,
   addSongSuccess,
   addSongFailure,
-  updateSong,
+  setEditSong,
+  updateSongRequest,
+  updateSongSuccess,
+  updateSongFailure,
   deleteSongRequest,
   deleteSongSuccess,
   deleteSongFailure,
+  reset,
 } = songSlice.actions;
 
 // Export reducer

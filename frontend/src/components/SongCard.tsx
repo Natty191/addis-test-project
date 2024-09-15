@@ -1,122 +1,64 @@
 /** @jsxImportSource theme-ui */
 import { Song } from "song";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import CardLink from "./CardLink";
+import Card from "./Card";
 import DeleteButton from "./DeleteButton";
+import styled from "@emotion/styled";
+import { HiHeart, HiOutlineHeart } from "react-icons/hi2";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import {
+  addFavoriteSongRequest,
+  openAuthModal,
+  removeFavoriteSongRequest,
+} from "../redux/authSlice";
+import { useState } from "react";
 
-const Card = styled.div<{ type?: string }>`
-  padding: 1.4rem;
-  border-radius: 0.6rem;
-  overflow: hidden;
-  transition: background-color 0.2s linear, transform 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
-  font-size: 1.7rem;
-
-  cursor: pointer;
-
-  img {
-    width: 100%;
-    object-fit: cover;
-    margin-bottom: 1rem;
-
-    ${(props) =>
-      props.type === "circular"
-        ? css`
-            border-radius: 100rem;
-            aspect-ratio: 1;
-          `
-        : css`
-            border-radius: 0.5rem;
-            aspect-ratio: 1.05;
-          `}
-  }
-
-  h3 {
-    width: min-content;
-    font-size: 1em;
-    font-weight: 300;
-    font-family: Poppins;
-    color: text;
-    white-space: nowrap; // Ensure title doesn't wrap
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: pointer;
-  }
-
-  :hover {
-    button {
-      visibility: visible;
-    }
-  }
+const StyledSongCard = styled.div`
+  position: relative;
 `;
 
-const SongCard = ({
-  song,
-  type,
-  title,
-  subTitle,
-}: {
-  song: Song;
-  type?: string;
-  title?: string;
-  subTitle?: string;
-}) => {
+const FavoriteButton = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem;
+  cursor: pointer;
+`;
+
+const SongCard = ({ song }: { song: Song }) => {
+  const { user } = useSelector((state: RootState) => state.auth);
+  const isFavorite = user ? user.favoriteSongs.includes(song._id) : false;
+  const dispatch = useDispatch();
+
+  function addRemoveFavorite() {
+    if (!user) {
+      dispatch(openAuthModal());
+    } else {
+      if (!isFavorite) {
+        dispatch(addFavoriteSongRequest(song._id));
+      } else {
+        dispatch(removeFavoriteSongRequest(song._id));
+      }
+    }
+  }
+
   return (
-    <Card
-      type={type}
-      sx={(theme) => ({
-        "&:hover": {
-          background:
-            type === "circular"
-              ? `linear-gradient(transparent, ${theme.colors?.grey})`
-              : "grey",
-          boxShadow: type == "circular" ? "none" : "medium",
-
-          position: "relative",
-        },
-      })}
-    >
-      <img
-        src={`/${type === "circular" ? "artist" : type}.jpg`}
-        alt={song.title}
-        sx={{}}
+    <StyledSongCard>
+      <Card
+        title={song.title}
+        subTitle={song.artist}
+        imageUrl={song.coverUrls?.[0] ?? ""}
+        defaultImageUrl="/song.jpg"
+        subTitleLink={song.artist}
       />
-
-      <div
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 1,
-          letterSpacing: ".12rem",
-        }}
-      >
-        <h3>{title ?? song.title}</h3>
-        <CardLink
-          to={
-            type == "circular" || subTitle
-              ? ""
-              : `search/artist?query=${song.artist}`
-          }
-          sx={{
-            color: "lightergrey",
-            fontSize: 0,
-            width: "min-content",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            cursor: "pointer",
-            "&:hover": {
-              textDecoration:
-                type === "circular" || subTitle ? "none" : "underline",
-            },
-          }}
-        >
-          {subTitle ?? (type === "circular" ? "Artist" : song.artist)}
-        </CardLink>
-      </div>
-      {type === "song" && <DeleteButton song={song} />}
-    </Card>
+      <FavoriteButton onClick={addRemoveFavorite} sx={{ color: "primary" }}>
+        {user && user.favoriteSongs.includes(song._id) ? (
+          <HiHeart size={30} />
+        ) : (
+          <HiOutlineHeart size={30} />
+        )}
+      </FavoriteButton>
+    </StyledSongCard>
   );
 };
 
