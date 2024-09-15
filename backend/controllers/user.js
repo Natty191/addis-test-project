@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
 const User = require("../models/user");
+const Song = require("../models/song");
 const generateToken = require("../utils/generateToken");
 
 // User Signup
@@ -94,29 +95,9 @@ const getUserProfile = asyncHandler(async (req, res) => {
   return res.status(200).json({ user });
 });
 
-const addFavorite = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  user.favoriteSongs.push(req.params.songId);
-  const updatedUser = await user.save();
-  return res.status(200).json({ message: "Favorite added", user: updatedUser });
-});
-
-const removeFavorite = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  user.favoriteSongs = user.favoriteSongs.filter(
-    (favorite) => favorite.toString() !== req.params.songId
-  );
-  const updatedUser = await user.save();
-  return res
-    .status(200)
-    .json({ message: "Favorite removed", user: updatedUser });
-});
-
 module.exports = {
   signup,
   login,
   logout,
   getUserProfile,
-  addFavorite,
-  removeFavorite,
 };

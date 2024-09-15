@@ -14,6 +14,9 @@ const {
   getPopularAlbums,
   getPopularGenres,
   getMySongs,
+  addFavorite,
+  removeFavorite,
+  getFavorites,
 } = require("../controllers/song");
 const { auth } = require("../middleware/auth");
 const { songValidation } = require("../validators/songValidation");
@@ -22,6 +25,9 @@ const { songValidation } = require("../validators/songValidation");
 router.route("/").post(auth, songValidation, createSong).get(getSongs);
 router.route("/search").get(searchSongs);
 router.route("/my-songs").get(auth, getMySongs);
+router.put("/add-favorite/:songId", auth, addFavorite);
+router.put("/remove-favorite/:songId", auth, removeFavorite);
+router.get("/favorites", auth, getFavorites);
 router.route("/search-to-add").get(searchSongToAdd);
 router.route("/popular-songs").get(getPopularSongs);
 router.route("/popular-artists").get(getPopularArtists);

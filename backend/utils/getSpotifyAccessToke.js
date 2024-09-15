@@ -8,7 +8,11 @@ async function getAccessToken() {
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
+  console.log(accessToken, tokenExpiresAt);
+
   if (accessToken && tokenExpiresAt > Date.now()) {
+    console.log("token", accessToken, tokenExpiresAt);
+
     return accessToken;
   }
 
@@ -26,6 +30,7 @@ async function getAccessToken() {
           Buffer.from(clientId + ":" + clientSecret).toString("base64"),
         "Content-Type": "application/x-www-form-urlencoded",
       },
+      timeout: 10000,
     }
   );
 

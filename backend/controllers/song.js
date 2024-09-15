@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const querystring = require("querystring");
 const axios = require("axios");
 const Song = require("../models/song");
+const User = require("../models/user");
 const { removeDuplicates } = require("../utils/removeDuplicates");
 const { getAccessToken } = require("../utils/getSpotifyAccessToke");
 const { validationResult } = require("express-validator");
@@ -42,7 +43,8 @@ const createSong = asyncHandler(async (req, res) => {
     if (newSong.genre === "") {
       newSong.genre = response.data.genres[0];
     }
-    newSong.artistImage = response.data.images[1].url;
+
+    newSong.artistImage = response.data.images[1]?.url ?? coverUrls[1];
   }
 
   await newSong.save();
@@ -59,6 +61,47 @@ const getSongs = asyncHandler(async (req, res) => {
   res.status(200).json({ songs });
 });
 
+// add remove favorites
+const addFavorite = asyncHandler(async (req, res) => {
+  // const user = await User.findById(req.user._id);
+  const user = req.user;
+  const song = await Song.findByIdAndUpdate(req.params.songId, {
+    $inc: { likes: 1 },
+  });
+  if (!song) {
+    throw new Error("Song not found");
+  }
+
+  user.favoriteSongs.push(req.params.songId);
+  const updatedUser = await user.save();
+  return res.status(200).json({ message: "Favorite added", user: updatedUser });
+});
+
+const removeFavorite = asyncHandler(async (req, res) => {
+  // const user = await User.findById(req.user._id);
+  const user = req.user;
+  const song = await Song.findByIdAndUpdate(req.params.songId, {
+    $inc: { likes: -1 },
+  });
+  user.favoriteSongs = user.favoriteSongs.filter(
+    (favorite) => favorite.toString() !== req.params.songId
+  );
+  const updatedUser = await user.save();
+  return res
+    .status(200)
+    .json({ message: "Favorite removed", user: updatedUser });
+});
+
+// get favorite songs
+const getFavorites = asyncHandler(async (req, res) => {
+  const { favoriteSongs: favIds } = await User.findById(req.user._id).select(
+    "favoriteSongs"
+  );
+  const favoriteSongs = await Song.find({ _id: { $in: favIds } });
+
+  res.json({ favoriteSongs });
+});
+
 // get my songs
 const getMySongs = asyncHandler(async (req, res) => {
   const songs = await Song.find({ creator: req.user._id.toString() });
@@ -68,6 +111,20 @@ const getMySongs = asyncHandler(async (req, res) => {
 
 // popular Songs
 const getPopularSongs = asyncHandler(async (req, res) => {
+  const { artist, album } = req.query;
+  if (artist) {
+    const popularSongs = await Song.find({ artist })
+      .sort({ likes: -1 })
+      .limit(10);
+    return res.json({ popularSongs });
+  }
+  if (album) {
+    const popularSongs = await Song.find({ album })
+      .sort({ likes: -1 })
+      .limit(10);
+    return res.json({ popularSongs });
+  }
+
   const popularSongs = await Song.find().sort({ likes: -1 }).limit(10);
 
   res.json({ popularSongs });
@@ -191,108 +248,102 @@ const getPopularGenres = asyncHandler(async (req, res) => {
 
 //  Search songs
 const searchSongs = asyncHandler(async (req, res) => {
-  try {
-    const { query, filter, sort } = req.query;
+  const { query, filter, sort } = req.query;
 
-    // Search with no filter
-    const songsIndex = await Song.find(
-      { $text: { $search: query.value } },
-      { score: { $meta: "textScore" } }
-    ).sort({ score: { $meta: "textScore" } });
+  // Search with no filter
+  const songsIndex = await Song.find(
+    { $text: { $search: query.value } },
+    { score: { $meta: "textScore" } }
+  ).sort({ score: { $meta: "textScore" } });
 
-    const songsRegex = await Song.find({
-      $or: [
-        {
-          title: {
-            $regex: `${query.value.trim().replace(" ", "|")}`,
-            $options: "i",
-          },
-        },
-        {
-          artist: {
-            $regex: `${query.value.trim().replace(" ", "|")}`,
-            $options: "i",
-          },
-        },
-        {
-          album: {
-            $regex: `${query.value.trim().replace(" ", "|")}`,
-            $options: "i",
-          },
-        },
-        {
-          genre: {
-            $regex: `${query.value.trim().replace(" ", "|")}`,
-            $options: "i",
-          },
-        },
-      ],
-    });
-
-    // Search with filers
-    let songsTitle = [];
-    let songsArtist = [];
-    let songsAlbum = [];
-    let songsGenre = [];
-
-    if (!query.filter || query.filter === "all") {
-      songsTitle = await Song.find({
+  const songsRegex = await Song.find({
+    $or: [
+      {
         title: {
           $regex: `${query.value.trim().replace(" ", "|")}`,
           $options: "i",
         },
-      });
-    }
-    if (query.filter === "artist") {
-      songsArtist = await Song.find({
+      },
+      {
         artist: {
           $regex: `${query.value.trim().replace(" ", "|")}`,
           $options: "i",
         },
-      });
-    }
-    if (query.filter === "album") {
-      songsAlbum = await Song.find({
+      },
+      {
         album: {
           $regex: `${query.value.trim().replace(" ", "|")}`,
           $options: "i",
         },
-      });
-    }
-    if (query.filter === "genre") {
-      songsGenre = await Song.find({
+      },
+      {
         genre: {
           $regex: `${query.value.trim().replace(" ", "|")}`,
           $options: "i",
         },
-      });
-    }
+      },
+    ],
+  });
 
-    // console.log(
-    //   songsTitle[0]?.title,
-    //   songsArtist[0]?.title,
-    //   songsAlbum[0]?.title,
-    //   songsIndex[0]?.title,
-    //   songsRegex[0]?.title
-    // );
+  // Search with filers
+  let songsTitle = [];
+  let songsArtist = [];
+  let songsAlbum = [];
+  let songsGenre = [];
 
-    // Removing duplicates
-    const filtered = removeDuplicates([
-      ...songsTitle,
-      ...songsArtist,
-      ...songsAlbum,
-      ...songsGenre,
-      ...songsIndex,
-      ...songsRegex,
-    ]);
-    const all = removeDuplicates([...songsIndex, ...songsRegex]);
-
-    res.status(200).json({ filtered, all });
-  } catch (error) {
-    res.status(500);
-
-    throw new Error("Server error");
+  if (!query.filter || query.filter === "all") {
+    songsTitle = await Song.find({
+      title: {
+        $regex: `${query.value.trim().replace(" ", "|")}`,
+        $options: "i",
+      },
+    });
   }
+  if (query.filter === "artist") {
+    songsArtist = await Song.find({
+      artist: {
+        $regex: `${query.value.trim().replace(" ", "|")}`,
+        $options: "i",
+      },
+    });
+  }
+  if (query.filter === "album") {
+    songsAlbum = await Song.find({
+      album: {
+        $regex: `${query.value.trim().replace(" ", "|")}`,
+        $options: "i",
+      },
+    });
+  }
+  if (query.filter === "genre") {
+    songsGenre = await Song.find({
+      genre: {
+        $regex: `${query.value.trim().replace(" ", "|")}`,
+        $options: "i",
+      },
+    });
+  }
+
+  // console.log(
+  //   songsTitle[0]?.title,
+  //   songsArtist[0]?.title,
+  //   songsAlbum[0]?.title,
+  //   songsIndex[0]?.title,
+  //   songsRegex[0]?.title
+  // );
+
+  // Removing duplicates
+  const filtered = removeDuplicates([
+    ...songsTitle,
+    ...songsArtist,
+    ...songsAlbum,
+    ...songsGenre,
+    ...songsIndex,
+    ...songsRegex,
+  ]);
+  const all = removeDuplicates([...songsIndex, ...songsRegex]);
+
+  res.status(200).json({ filtered, all });
 });
 
 // search Song using spotify api
@@ -302,6 +353,11 @@ const searchSongToAdd = asyncHandler(async (req, res) => {
     throw new Error("Validation Error");
 
   const token = await getAccessToken();
+
+  if (!token) {
+    throw new Error("Failed to retrieve access token");
+  }
+
   const query = querystring.stringify({
     // q: `title:${title} artist:${artist} album:${album} genre:${genre}`,
     q:
@@ -366,7 +422,7 @@ const updateSong = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { title, artist, album, genre } = req.body;
 
-  const song = await Song.find({ _id: id, creator: req.user._id });
+  const song = await Song.findOne({ _id: id, creator: req.user._id });
   if (!song) {
     res.status(404);
     throw new Error("Song not found");
@@ -444,6 +500,9 @@ const getSongStatistics = asyncHandler(async (req, res) => {
 module.exports = {
   createSong,
   getSongs,
+  addFavorite,
+  removeFavorite,
+  getFavorites,
   searchSongs,
   getMySongs,
   getPopularSongs,

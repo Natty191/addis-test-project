@@ -30,8 +30,20 @@ export const searchToAddAPI = (
 export const fetchMySongsAPI = () =>
   axios.get(`${API_BASE_URL}/songs/my-songs`, { withCredentials: true });
 
-export const fetchPopularSongs = ({ limit = 10, page = 1 }) =>
-  axios.get(`${API_BASE_URL}/songs/popular-songs`, { params: { limit, page } });
+export const fetchPopularSongs = ({
+  artist,
+  album,
+  limit = 10,
+  page = 1,
+}: {
+  artist?: string;
+  album?: string;
+  limit: number;
+  page: number;
+}) =>
+  axios.get(`${API_BASE_URL}/songs/popular-songs`, {
+    params: { artist, album, limit, page },
+  });
 
 export const fetchPopularArtists = ({ limit = 10, page = 1 }) =>
   axios.get(`${API_BASE_URL}/songs/popular-artists`, {
@@ -86,16 +98,19 @@ export const getUser = () => {
 };
 
 export const addFavoriteSongAPI = (songId: string) => {
-  return axios.put(`${API_BASE_URL}/user/add-favorite/${songId}`, null, {
+  return axios.put(`${API_BASE_URL}/songs/add-favorite/${songId}`, null, {
     withCredentials: true,
   });
 };
 
 export const removeFavoriteSongAPI = (songId: string) => {
-  return axios.put(`${API_BASE_URL}/user/remove-favorite/${songId}`, null, {
+  return axios.put(`${API_BASE_URL}/songs/remove-favorite/${songId}`, null, {
     withCredentials: true,
   });
 };
+
+export const fetchFavoritesAPI = () =>
+  axios.get(`${API_BASE_URL}/songs/favorites`, { withCredentials: true });
 
 export const logout = () => {
   return axios.post(`${API_BASE_URL}/user/logout`, null, {

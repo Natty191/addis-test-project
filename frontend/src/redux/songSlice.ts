@@ -40,6 +40,8 @@ type SongState = {
   songs: { filtered: Song[]; all: Song[] };
   songsFound: NewSong[];
   mySongs: Song[];
+  favorites: Song[];
+  loadingFavorites: boolean;
   popularSongs: Song[];
   loadingPopularSongs: boolean;
   popularArtists: PopularArtist[];
@@ -59,6 +61,8 @@ const initialState: SongState = {
   songs: { filtered: [], all: [] },
   songsFound: [],
   mySongs: [],
+  favorites: [],
+  loadingFavorites: false,
   popularSongs: [],
   loadingPopularSongs: false,
   popularArtists: [],
@@ -113,6 +117,19 @@ const songSlice = createSlice({
       // state.loading = false;
       state.error = action.payload;
     },
+
+    getFavoritesRequest(state) {
+      state.loadingFavorites = true;
+      state.error = null;
+    },
+    getFavoritesSuccess(state, action: PayloadAction<Song[]>) {
+      state.loadingFavorites = false;
+      state.favorites = action.payload;
+    },
+    getFavoritesFailure(state, action: PayloadAction<string>) {
+      state.loadingFavorites = false;
+      state.error = action.payload;
+    },
     getMySongsRequest(state) {
       state.loading = true;
       state.error = null;
@@ -148,7 +165,10 @@ const songSlice = createSlice({
     // with optional payload
     getPopularSongsRequest(
       state,
-      action: PayloadAction<{ limit?: number; page?: number } | undefined>
+      action: PayloadAction<
+        | { artist?: string; album?: string; limit?: number; page?: number }
+        | undefined
+      >
     ) {
       state.loadingPopularSongs = true;
       state.error = null;
@@ -268,6 +288,9 @@ export const {
   searchSongToCreateRequst,
   searchSongToCreateSuccess,
   searchSongToCreateFailure,
+  getFavoritesRequest,
+  getFavoritesSuccess,
+  getFavoritesFailure,
   getMySongsRequest,
   getMySongsSuccess,
   getMySongsFailure,

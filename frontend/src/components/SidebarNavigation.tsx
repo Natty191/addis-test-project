@@ -2,6 +2,11 @@ import styled from "@emotion/styled";
 import NavList from "./NavLIst";
 import { NavObject } from "../data/navigations";
 import { MdMusicNote } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { useEffect } from "react";
+import { getFavoritesRequest } from "../redux/songSlice";
+import Spinner from "./Spinner";
 
 const StyledSidebarNavigation = styled.div`
   margin-bottom: 2rem;
@@ -11,6 +16,16 @@ const StyledSidebarNavigation = styled.div`
 `;
 
 const SidebarNavigation = ({ navigations }: { navigations: NavObject }) => {
+  const { user } = useSelector((state: RootState) => state.auth);
+  const { favorites, loadingFavorites } = useSelector(
+    (state: RootState) => state.songs
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getFavoritesRequest());
+  }, [user?.favoriteSongs, dispatch]);
+
   return (
     <StyledSidebarNavigation>
       {navigations.map((nav) => (
@@ -25,6 +40,20 @@ const SidebarNavigation = ({ navigations }: { navigations: NavObject }) => {
           ))}
         </NavList>
       ))}
+      {loadingFavorites ? (
+        <Spinner />
+      ) : (
+        <NavList title={"Favorites"}>
+          {favorites?.slice(0, 7).map((item) => (
+            <NavList.Item
+              key={item._id}
+              to={`/favorites`}
+              title={item.title}
+              icon={<MdMusicNote />}
+            />
+          ))}
+        </NavList>
+      )}
     </StyledSidebarNavigation>
   );
 };

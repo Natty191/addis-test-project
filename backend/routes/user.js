@@ -4,8 +4,6 @@ const {
   login,
   logout,
   getUserProfile,
-  addFavorite,
-  removeFavorite,
 } = require("../controllers/user");
 const {
   signupValidation,
@@ -19,7 +17,5 @@ router.post("/signup", signupValidation, signup);
 router.post("/login", loginValidation, login);
 router.post("/logout", logout);
 router.get("/me", auth, getUserProfile);
-router.put("/add-favorite/:songId", auth, addFavorite);
-router.put("/remove-favorite/:songId", auth, removeFavorite);
 
 module.exports = router;

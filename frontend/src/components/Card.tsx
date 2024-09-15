@@ -96,7 +96,7 @@ const Card = ({
     >
       <Image type={type} sx={{ bg: "lightgrey" }}>
         <img
-          // sx={{ display: isLoaded ? "block" : "block" }}
+          sx={{ display: isLoaded ? "block" : "block" }}
           src={imageUrl}
           onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
             (e.target as HTMLImageElement).src = defaultImageUrl;

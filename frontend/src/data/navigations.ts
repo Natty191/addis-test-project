@@ -7,13 +7,6 @@ import {
   HiSignal,
   HiUser,
 } from "react-icons/hi2";
-import store from "../redux/store";
-
-const favoriteSongs = store
-  .getState()
-  .songs.popularSongs.filter((song) =>
-    store.getState().auth.user?.favoriteSongs.includes(song._id)
-  );
 
 export type NavObject = {
   title: string;
@@ -30,13 +23,13 @@ export const navigations: NavObject = [
         icon: HiDocumentDuplicate,
       },
       {
-        text: "Active",
-        href: "#",
+        text: "Albums",
+        href: "/albums",
         icon: HiMiniUsers,
       },
       {
-        text: "Radio",
-        href: "#",
+        text: "Artists",
+        href: "/artists",
         icon: HiSignal,
       },
     ],
@@ -51,21 +44,14 @@ export const navigations: NavObject = [
       },
       {
         text: "Albums",
-        href: "/search/album",
+        href: "#",
         icon: HiMusicNote,
       },
       {
         text: "Artists",
-        href: "/search/artist",
+        href: "#",
         icon: HiUser,
       },
     ],
-  },
-  {
-    title: "Your Favorites",
-    navigations: favoriteSongs.map((song) => ({
-      text: song.title,
-      href: ``,
-    })),
   },
 ];

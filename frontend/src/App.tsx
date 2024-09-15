@@ -1,6 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ThemeUIProvider } from "theme-ui";
-import theme from "./styles/theme";
+import { useColorMode } from "theme-ui";
 import GlobalStyles from "./styles/GlobalStyles";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,21 +10,23 @@ import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthModal from "./components/AuthModal";
 import MySongsPage from "./pages/MySongsPage";
+import FavoritesPage from "./pages/FavoritesPage";
+import ArtistsPage from "./pages/ArtistsPage";
+import AlbumsPage from "./pages/AlbumsPage";
+import SongsPage from "./pages/SongsPage";
 
 Modal.setAppElement("#root");
 
 function App() {
+  const [colorMode] = useColorMode();
+
   const router = createBrowserRouter([
     {
       element: <AppLayout />,
       children: [
         {
           path: "/",
-          element: (
-            // <ProtectedRoute>
-            <HomePage />
-            // </ProtectedRoute>
-          ),
+          element: <HomePage />,
         },
         {
           path: "my-songs",
@@ -35,23 +36,37 @@ function App() {
             </ProtectedRoute>
           ),
         },
+        {
+          path: "favorites",
+          element: (
+            <ProtectedRoute>
+              <FavoritesPage />
+            </ProtectedRoute>
+          ),
+        },
         { path: "search", element: <SearchPage /> },
         { path: "search/:filter", element: <SearchPage /> },
+        { path: "artists", element: <ArtistsPage /> },
+        { path: "albums", element: <AlbumsPage /> },
+        { path: "songs", element: <SongsPage /> },
       ],
     },
   ]);
 
   return (
-    <ThemeUIProvider theme={theme}>
+    <>
       <GlobalStyles />
       <ToastContainer
         autoClose={1000}
         hideProgressBar={true}
-        toastStyle={{ backgroundColor: "#131313" }}
+        toastStyle={{
+          backgroundColor: colorMode === "light" ? "#e9e9e9" : "#131313",
+          color: colorMode === "light" ? "#414141" : "#d1d1d1",
+        }}
       />
       <RouterProvider router={router} />
       <AuthModal />
-    </ThemeUIProvider>
+    </>
   );
 }
 

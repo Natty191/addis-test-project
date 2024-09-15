@@ -18,9 +18,12 @@ const StyledSongCard = styled.div`
   position: relative;
 `;
 
-const SongCard = ({ song }: { song: Song }) => {
+const SongCard = ({
+  song,
+  ...rest
+}: { song: Song } & React.HTMLAttributes<HTMLDivElement>) => {
   return (
-    <StyledSongCard>
+    <StyledSongCard {...rest}>
       <Card
         title={song.title}
         subTitle={song.artist}

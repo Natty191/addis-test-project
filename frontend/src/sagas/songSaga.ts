@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 import { PayloadAction } from "@reduxjs/toolkit";
 import {
   fetchSongsRequest,
@@ -30,6 +30,9 @@ import {
   updateSongFailure,
   NewSong,
   addSongFailure,
+  getFavoritesSuccess,
+  getFavoritesFailure,
+  getFavoritesRequest,
 } from "../redux/songSlice";
 import {
   fetchSongsAPI,
@@ -42,6 +45,7 @@ import {
   fetchPopularAlbums,
   fetchPopularGenres,
   fetchMySongsAPI,
+  fetchFavoritesAPI,
 } from "../utils/api";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -66,6 +70,17 @@ function* fetchSongsSaga(
     yield put(fetchSongsSuccess(response.data));
   } catch (error: any) {
     yield put(fetchSongsFailure(error.message));
+  }
+}
+
+// Worker saga: will be fired on fetch favorite action
+function* getFavoritesSaga(): Generator<any, void, any> {
+  try {
+    const response = yield call(fetchFavoritesAPI);
+
+    yield put(getFavoritesSuccess(response.data.favoriteSongs));
+  } catch (error: any) {
+    yield put(getFavoritesFailure(error.message));
   }
 }
 
@@ -106,6 +121,7 @@ function* addSongSaga(action: PayloadAction<any>): Generator<any, void, any> {
     const response = yield call(addSongAPI, action.payload);
 
     yield put(addSongSuccess(response.data.song));
+    yield put(getPopularSongsRequest({ limit: 10, page: 1 }));
     yield put(getPopularArtistsRequest({ limit: 10, page: 1 }));
     yield put(getPopularAlbumsRequest({ limit: 10, page: 1 }));
     yield put(getPopularGenresRequest({ limit: 10, page: 1 }));
@@ -118,10 +134,17 @@ function* addSongSaga(action: PayloadAction<any>): Generator<any, void, any> {
 
 // Worker saga: will be fired on getPopularSongs action
 function* getPopularSongsSaga(
-  action: PayloadAction<{ limit: number; page: number }>
+  action: PayloadAction<{
+    artist?: string;
+    album?: string;
+    limit: number;
+    page: number;
+  }>
 ): Generator<any, void, any> {
   try {
     const response = yield call(fetchPopularSongs, {
+      artist: action.payload.artist,
+      album: action.payload.album,
       limit: action.payload.limit,
       page: action.payload.page,
     });
@@ -213,7 +236,8 @@ export default function* songSaga() {
   yield takeLatest(fetchSongsRequest.type, fetchSongsSaga);
   yield takeLatest(searchSongToCreateRequst.type, searchSongToAddSaga);
   yield takeLatest(getMySongsRequest.type, getMySongsSaga);
-  yield takeLatest(addSongStart.type, addSongSaga);
+  yield takeLatest(getFavoritesRequest.type, getFavoritesSaga);
+  yield takeEvery(addSongStart.type, addSongSaga);
   yield takeLatest(getPopularSongsRequest.type, getPopularSongsSaga);
   yield takeLatest(getPopularArtistsRequest.type, getPopularArtistsSaga);
   yield takeLatest(getPopularAlbumsRequest.type, getPopularAlbumsSaga);
