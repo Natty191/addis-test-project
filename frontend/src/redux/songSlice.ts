@@ -273,9 +273,14 @@ const songSlice = createSlice({
     },
     reset(state) {
       state.loading = false;
-      state.error = initialState.error;
-      state.songs = initialState.songs;
-      state.songsFound = initialState.songsFound;
+      state.loadingAddSong = false;
+      state.loadingFavorites = false;
+      state.loadingPopularSongs = false;
+      state.loadingPopularArtists = false;
+      state.loadingPopularAlbums = false;
+      state.loadingPopularGenres = false;
+      state.mySongs = [];
+      state.favorites = [];
     },
   },
 });

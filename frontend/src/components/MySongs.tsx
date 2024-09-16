@@ -1,8 +1,5 @@
 import styled from "@emotion/styled";
-import SongCard from "./SongCard";
 import { Song } from "song";
-import SongsFoundList from "./SongsFoundList";
-import SongsListCard from "./SongsListICard";
 import MySongCard from "./MySongCard";
 
 const SongsGrid = styled.div`
@@ -25,12 +22,6 @@ const MySongs = ({ songs }: { songs: Song[] }) => {
         <MySongCard song={song} />
       ))}
     </SongsGrid>
-
-    // <SongsGrid>
-    //   {songs.map((song) => (
-    //     <SongCard song={song} />
-    //   ))}
-    // </SongsGrid>
   );
 };
 
