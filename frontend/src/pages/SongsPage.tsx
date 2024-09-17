@@ -29,7 +29,7 @@ const SongsPage = () => {
     dispatch(
       getPopularSongsRequest({ artist, album, genre, limit: 50, page: 1 })
     );
-  }, [dispatch, artist, album]);
+  }, [dispatch, artist, album, genre]);
 
   return (
     <TitledSection
