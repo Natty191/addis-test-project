@@ -1,14 +1,7 @@
 /** @jsxImportSource theme-ui */
-import { useState } from "react";
-import ConfirmDelete from "./ConfirmDelete";
-import {
-  deleteSongRequest,
-  openAddModal,
-  setEditSong,
-} from "../redux/songSlice";
+import { openAddModal, setEditSong } from "../redux/songSlice";
 import { useDispatch } from "react-redux";
-import { HiPencil, HiTrash } from "react-icons/hi2";
-import CenteredModal from "./CenteredModal";
+import { HiPencil } from "react-icons/hi2";
 import { Song } from "song";
 
 const EditButton = ({ song }: { song: Song }) => {

@@ -1,5 +1,6 @@
 import { useDeferredValue, useEffect, useRef, useState } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
+import debounce from "lodash.debounce";
 
 export function useSearch(
   initial: string
@@ -12,7 +13,7 @@ export function useSearch(
   const [query, setQuery] = useState<string>(
     () => searchParams.get("query") ?? initial
   );
-  const defferedQuery = useDeferredValue(query);
+  // const defferedQuery = useDeferredValue(query);
   const location = useLocation();
   const ref = useRef<HTMLInputElement>(null);
 
@@ -22,14 +23,18 @@ export function useSearch(
     ref.current?.blur();
   }, [location.pathname]);
 
-  useEffect(() => {
-    if (defferedQuery === "") {
+  const debouncedSetQuery = debounce((searchQuery: string) => {
+    if (query === "") {
       searchParams.delete("query");
     } else {
-      searchParams.set("query", defferedQuery);
+      searchParams.set("query", searchQuery);
     }
     setSearchParams(searchParams, { replace: true });
-  }, [defferedQuery]);
+  }, 300);
+
+  useEffect(() => {
+    debouncedSetQuery(query);
+  }, [query]);
 
   return [query, setQuery, ref];
 }

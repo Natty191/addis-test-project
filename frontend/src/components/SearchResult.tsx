@@ -10,7 +10,6 @@ const Row = styled.div`
   display: flex;
   gap: 1rem;
   overflow: hidden;
-  /* align-items: stretch; */
   justify-content: stretch;
   padding: 1.25rem 0;
 `;
@@ -19,8 +18,6 @@ const SearchResult = () => {
   const { songs, loading, error } = useSongs();
 
   if (songs.filtered.length === 0) return <div>No data</div>;
-
-  if (loading) return <div>Loading...</div>;
   if (error) return <div>Error...{error}</div>;
 
   return (

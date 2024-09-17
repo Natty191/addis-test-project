@@ -30,7 +30,12 @@ export const navigations: NavObject = [
       {
         text: "Artists",
         href: "/artists",
-        icon: HiSignal,
+        icon: HiMusicNote,
+      },
+      {
+        text: "Songs",
+        href: "/songs",
+        icon: HiUser,
       },
     ],
   },

@@ -3,11 +3,11 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getUserRequest } from "../redux/authSlice";
 import AddSongModal from "../components/AddSongModal";
-import { useOutsideClick } from "../hooks/useOutsideClick";
+import SpinnerFullPage from "../components/SpinnerFullpage";
 
 const StyledAppLayout = styled.div`
   display: grid;
@@ -36,7 +36,7 @@ const AppLayout = () => {
 
   useEffect(() => {
     dispatch(getUserRequest());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
@@ -61,7 +61,9 @@ const AppLayout = () => {
           }}
         >
           <Container>
-            <Outlet />
+            <Suspense fallback={<SpinnerFullPage />}>
+              <Outlet />
+            </Suspense>
           </Container>
         </Main>
       </StyledAppLayout>

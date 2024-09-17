@@ -1,16 +1,8 @@
-import styled from "@emotion/styled";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { getUserRequest, openAuthModal } from "../redux/authSlice";
-
-const FullPage = styled.div`
-  height: 100vh;
-  background-color: var(--color-grey-50);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+import SpinnerFullPage from "./SpinnerFullpage";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { loading, isAuthenticated, isModalOpen } = useSelector(
@@ -24,14 +16,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     dispatch(getUserRequest());
   }, [dispatch]);
 
-  // if (!loading && !isAuthenticated)
-  if (loading)
-    return (
-      <FullPage>
-        {/* <Spinner /> */}
-        <div>Loading...</div>
-      </FullPage>
-    );
+  if (loading) return <SpinnerFullPage />;
 
   if (isAuthenticated) return children;
 }

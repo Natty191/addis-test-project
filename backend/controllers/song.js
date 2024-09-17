@@ -111,7 +111,7 @@ const getMySongs = asyncHandler(async (req, res) => {
 
 // popular Songs
 const getPopularSongs = asyncHandler(async (req, res) => {
-  const { artist, album } = req.query;
+  const { artist, album, genre } = req.query;
   if (artist) {
     const popularSongs = await Song.find({ artist })
       .sort({ likes: -1 })
@@ -120,6 +120,12 @@ const getPopularSongs = asyncHandler(async (req, res) => {
   }
   if (album) {
     const popularSongs = await Song.find({ album })
+      .sort({ likes: -1 })
+      .limit(10);
+    return res.json({ popularSongs });
+  }
+  if (genre) {
+    const popularSongs = await Song.find({ genre })
       .sort({ likes: -1 })
       .limit(10);
     return res.json({ popularSongs });

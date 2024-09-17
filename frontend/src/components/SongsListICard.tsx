@@ -63,9 +63,11 @@ const SongsListCard = ({
         }}
       />
       <Links sx={{ color: "lightestgrey" }}>
-        <CardLink to="#">{song.title}</CardLink>
+        <CardLink sx={{ ":hover": { textDecoration: "none" } }} to="#">
+          {song.title}
+        </CardLink>
         <CardLink
-          to="#"
+          to={withFavButton ? `/songs?artist=${song.artist}` : "#"}
           sx={{
             color: "lightergrey",
           }}

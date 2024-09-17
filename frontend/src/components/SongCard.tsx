@@ -29,7 +29,7 @@ const SongCard = ({
         subTitle={song.artist}
         imageUrl={song.coverUrls?.[1] ?? ""}
         defaultImageUrl="/song.jpg"
-        subTitleLink={song.artist}
+        subTitleLink={`/songs?artist=${song.artist}`}
       />
       <FavoriteButton
         sx={{ position: "absolute", right: 0, top: 0 }}

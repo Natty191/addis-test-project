@@ -166,7 +166,13 @@ const songSlice = createSlice({
     getPopularSongsRequest(
       state,
       action: PayloadAction<
-        | { artist?: string; album?: string; limit?: number; page?: number }
+        | {
+            artist?: string;
+            album?: string;
+            genre?: string;
+            limit?: number;
+            page?: number;
+          }
         | undefined
       >
     ) {

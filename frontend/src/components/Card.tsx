@@ -77,11 +77,13 @@ const Card = ({
   title,
   subTitle,
   subTitleLink,
-}: CardProps) => {
+  ...rest
+}: CardProps & React.HTMLAttributes<HTMLDivElement>) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
     <StyledCard
+      {...rest}
       sx={(theme) => ({
         "&:hover": {
           background:
@@ -116,7 +118,7 @@ const Card = ({
       >
         <H3>{title}</H3>
         <CardLink
-          to={subTitleLink ?? ""}
+          to={subTitleLink ?? "#"}
           sx={{
             color: "lightergrey",
             fontSize: 0,

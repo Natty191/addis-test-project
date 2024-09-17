@@ -1,7 +1,6 @@
 /** @jsxImportSource theme-ui */
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
-import { background } from "styled-system";
 
 const rotate = keyframes`
   to {
@@ -16,6 +15,7 @@ const StyledSpinner = styled.div`
   aspect-ratio: 1;
   border-radius: 50%;
   -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 5px), #000 0);
+  mask: radial-gradient(farthest-side, #0000 calc(100% - 5px), #000 0);
   animation: ${rotate} 1.5s infinite linear;
 `;
 

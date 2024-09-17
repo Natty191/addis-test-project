@@ -137,6 +137,7 @@ function* getPopularSongsSaga(
   action: PayloadAction<{
     artist?: string;
     album?: string;
+    genre?: string;
     limit: number;
     page: number;
   }>
@@ -145,6 +146,7 @@ function* getPopularSongsSaga(
     const response = yield call(fetchPopularSongs, {
       artist: action.payload.artist,
       album: action.payload.album,
+      genre: action.payload.genre,
       limit: action.payload.limit,
       page: action.payload.page,
     });

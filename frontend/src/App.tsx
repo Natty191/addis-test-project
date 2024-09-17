@@ -1,3 +1,4 @@
+import { lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useColorMode } from "theme-ui";
 import GlobalStyles from "./styles/GlobalStyles";
@@ -5,15 +6,16 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "react-modal";
 import AppLayout from "./layouts/AppLayout";
-import SearchPage from "./pages/SearchPage";
-import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthModal from "./components/AuthModal";
-import MySongsPage from "./pages/MySongsPage";
-import FavoritesPage from "./pages/FavoritesPage";
-import ArtistsPage from "./pages/ArtistsPage";
-import AlbumsPage from "./pages/AlbumsPage";
-import SongsPage from "./pages/SongsPage";
+
+const HomePage = lazy(() => import("./pages/HomePage"));
+const SearchPage = lazy(() => import("./pages/SearchPage"));
+const MySongsPage = lazy(() => import("./pages/MySongsPage"));
+const FavoritesPage = lazy(() => import("./pages/FavoritesPage"));
+const ArtistsPage = lazy(() => import("./pages/ArtistsPage"));
+const AlbumsPage = lazy(() => import("./pages/AlbumsPage"));
+const SongsPage = lazy(() => import("./pages/SongsPage"));
 
 Modal.setAppElement("#root");
 

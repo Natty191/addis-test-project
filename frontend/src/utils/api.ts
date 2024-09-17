@@ -33,16 +33,18 @@ export const fetchMySongsAPI = () =>
 export const fetchPopularSongs = ({
   artist,
   album,
+  genre,
   limit = 10,
   page = 1,
 }: {
   artist?: string;
   album?: string;
+  genre?: string;
   limit: number;
   page: number;
 }) =>
   axios.get(`${API_BASE_URL}/songs/popular-songs`, {
-    params: { artist, album, limit, page },
+    params: { artist, album, genre, limit, page },
   });
 
 export const fetchPopularArtists = ({ limit = 10, page = 1 }) =>

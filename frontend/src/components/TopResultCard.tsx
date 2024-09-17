@@ -39,31 +39,36 @@ function capitalize(str: string) {
 }
 
 const TopResultCard = ({ song }: { song: Song }) => {
-  const { filter } = useParams();
+  const { filter } = useParams<{ filter: keyof Song }>();
 
   return (
-    <StyledTopResultCard
-      sx={{
-        bg: "grey",
-        fontSize: [".8em", "1em"],
-        ":hover": { bg: "lightgrey" },
-      }}
-    >
-      <img
-        // src={`/${!filter || filter === "genre" ? "artist" : filter}.jpg`}
-        src={song.coverUrls[0]}
-        alt=""
-        sx={{ width: "10rem", aspectRatio: 1, borderRadius: "default" }}
-      />
+    <Link to={filter ? `/songs?${filter}=${song[filter]}` : "#"}>
+      <StyledTopResultCard
+        sx={{
+          bg: "grey",
+          fontSize: [".8em", "1em"],
+          ":hover": { bg: "lightgrey" },
+        }}
+      >
+        <img
+          // src={`/${!filter || filter === "genre" ? "artist" : filter}.jpg`}
+          src={song.coverUrls[0]}
+          alt=""
+          sx={{ width: "10rem", aspectRatio: 1, borderRadius: "default" }}
+        />
 
-      <h2>{song[(filter as keyof Song) ?? "title"]}</h2>
-      <p sx={{ color: "lightergrey", fontWeight: "body" }}>
-        <span>{capitalize(filter ?? "Song")} &bull;&nbsp;&nbsp;</span>
-        <Link to="#" sx={{ color: "lightestgrey", cursor: "pointer" }}>
-          {song.artist}
-        </Link>
-      </p>
-    </StyledTopResultCard>
+        <h2>{song[filter ?? "title"]}</h2>
+        <p sx={{ color: "lightergrey", fontWeight: "body" }}>
+          <span>{capitalize(filter ?? "Song")} &bull;&nbsp;&nbsp;</span>
+          <Link
+            to={`/songs?artist=${song.artist}`}
+            sx={{ color: "lightestgrey", cursor: "pointer" }}
+          >
+            {song.artist}
+          </Link>
+        </p>
+      </StyledTopResultCard>{" "}
+    </Link>
   );
 };
 
