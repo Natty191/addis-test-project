@@ -19,10 +19,11 @@ const {
   getFavorites,
 } = require("../controllers/song");
 const { auth } = require("../middleware/auth");
-const { songValidation } = require("../validators/songValidation");
+const { songValidation } = require("../validators/song.validator");
+const parser = require("../validators/errors.parser");
 
 // router.route("/").post(auth, createSong).get(getSongs);
-router.route("/").post(auth, songValidation, createSong).get(getSongs);
+router.route("/").post(auth, songValidation, parser, createSong).get(getSongs);
 router.route("/search").get(searchSongs);
 router.route("/my-songs").get(auth, getMySongs);
 router.put("/add-favorite/:songId", auth, addFavorite);

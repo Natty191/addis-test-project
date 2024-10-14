@@ -1,19 +1,19 @@
 const asyncHandler = require("express-async-handler");
 const querystring = require("querystring");
 const axios = require("axios");
-const Song = require("../models/song");
-const User = require("../models/user");
+const Song = require("../models/songs/index");
+const User = require("../models/users/index");
 const { removeDuplicates } = require("../utils/removeDuplicates");
 const { getAccessToken } = require("../utils/getSpotifyAccessToke");
 const { validationResult } = require("express-validator");
 
 // Create a new song
 const createSong = asyncHandler(async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400);
-    throw new Error(errors.array()[0].msg);
-  }
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   res.status(400);
+  //   throw new Error(errors.array()[0].msg);
+  // }
 
   const { title, artist, album, genre, coverUrls, artistId, preview_url } =
     req.body;
@@ -27,28 +27,31 @@ const createSong = asyncHandler(async (req, res) => {
     artistImage: coverUrls[0],
     previewAudioUrl: preview_url ?? "",
     creator: req.user._id,
+    artistId,
   });
 
-  if (artistId) {
-    const token = await getAccessToken();
+  const song = await newSong.createSong();
 
-    const url = `https://api.spotify.com/v1/artists/${artistId}`;
+  // if (newSong.artistId) {
+  //   const token = await getAccessToken();
 
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  //   const url = `https://api.spotify.com/v1/artists/${artistId}`;
 
-    if (newSong.genre === "") {
-      newSong.genre = response.data.genres[0];
-    }
+  //   const response = await axios.get(url, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   });
 
-    newSong.artistImage = response.data.images[1]?.url ?? coverUrls[1];
-  }
+  //   if (newSong.genre === "") {
+  //     newSong.genre = response.data.genres[0];
+  //   }
 
-  await newSong.save();
-  res.status(201).json({ message: "Song created successfully", song: newSong });
+  //   newSong.artistImage = response.data.images[1]?.url ?? coverUrls[1];
+  // }
+
+  // await newSong.save();
+  res.status(201).json({ message: "Song created successfully", song });
 });
 
 // get all songs

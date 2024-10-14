@@ -33,6 +33,9 @@ const songSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "A song must have a creator"],
     },
+    artistId: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
@@ -42,4 +45,4 @@ songSchema.index(
   { weights: { title: 8, artist: 6, album: 6, genre: 2 } }
 );
 
-module.exports = mongoose.model("Song", songSchema);
+module.exports = songSchema;

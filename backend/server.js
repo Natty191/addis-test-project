@@ -9,7 +9,7 @@ const cloudinary = require("cloudinary").v2;
 const cookieParser = require("cookie-parser");
 dotenv.config();
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 // connecting to the database
 connectDB();
@@ -27,7 +27,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "https://music-addis.vercel.app",
+    origin: ["http://localhost:5173", "https://music-addis.vercel.app"],
     credentials: true,
   })
 );
