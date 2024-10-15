@@ -1,6 +1,6 @@
 /** @jsxImportSource theme-ui */
 import styled from "@emotion/styled";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { Song } from "song";
 
 const StyledTopResultCard = styled.div`
@@ -40,9 +40,16 @@ function capitalize(str: string) {
 
 const TopResultCard = ({ song }: { song: Song }) => {
   const { filter } = useParams<{ filter: keyof Song }>();
+  const location = useLocation();
 
   return (
-    <Link to={filter ? `/songs?${filter}=${song[filter]}` : "#"}>
+    <Link
+      to={
+        filter
+          ? `/songs?${filter}=${song[filter]}`
+          : location.pathname + location.search
+      }
+    >
       <StyledTopResultCard
         sx={{
           bg: "grey",

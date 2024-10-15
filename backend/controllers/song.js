@@ -9,12 +9,6 @@ const { validationResult } = require("express-validator");
 
 // Create a new song
 const createSong = asyncHandler(async (req, res) => {
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   res.status(400);
-  //   throw new Error(errors.array()[0].msg);
-  // }
-
   const { title, artist, album, genre, coverUrls, artistId, preview_url } =
     req.body;
 
@@ -31,26 +25,6 @@ const createSong = asyncHandler(async (req, res) => {
   });
 
   const song = await newSong.createSong();
-
-  // if (newSong.artistId) {
-  //   const token = await getAccessToken();
-
-  //   const url = `https://api.spotify.com/v1/artists/${artistId}`;
-
-  //   const response = await axios.get(url, {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   });
-
-  //   if (newSong.genre === "") {
-  //     newSong.genre = response.data.genres[0];
-  //   }
-
-  //   newSong.artistImage = response.data.images[1]?.url ?? coverUrls[1];
-  // }
-
-  // await newSong.save();
   res.status(201).json({ message: "Song created successfully", song });
 });
 
@@ -332,14 +306,6 @@ const searchSongs = asyncHandler(async (req, res) => {
       },
     });
   }
-
-  // console.log(
-  //   songsTitle[0]?.title,
-  //   songsArtist[0]?.title,
-  //   songsAlbum[0]?.title,
-  //   songsIndex[0]?.title,
-  //   songsRegex[0]?.title
-  // );
 
   // Removing duplicates
   const filtered = removeDuplicates([
